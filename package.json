@@ -2,9 +2,9 @@
   "name": "niftybundles",
   "version": "0.0.1",
   "description": "A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node main.js",
     "test": "mocha"
   },
   "author": "NiftyBundles",
@@ -12,7 +12,8 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "conf": "^13.0.1"
+    "conf": "^13.0.1",
+    "figlet": "^1.7.0"
   },
   "devDependencies": {
     "mocha": "^10.6.0"
