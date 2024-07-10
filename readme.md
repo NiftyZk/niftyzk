@@ -1,5 +1,5 @@
 # NiftyBundles CLI
-A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark
+A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark on-chain
 
 NiftyBundles CLI is used for development for different applications where valid transactions are predetermined and distributed off-chain.
 Use cases include
