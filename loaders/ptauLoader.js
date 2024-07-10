@@ -1,5 +1,3 @@
-const chalk = require("chalk");
-
 const ptauFiles = [
     {
         power: 8,
@@ -168,16 +166,19 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 function explainPtauFiles() {
-    console.log("Available Powers of Tau ceremony files")
+    console.log("Available Powers of Tau ceremony files\n\n")
 
     for (let i = 0; i < ptauFiles.length; i++) {
+
         console.log(`## ${ptauFiles[i].name}`)
         console.log(`Hash ${ptauFiles[i].hash}`)
-        console.log(`Power: ${chalk.blue(ptauFiles[i].power)}, Max Constraints: ${chalk.blue(ptauFiles[i].maxConstraints)}`)
-        console.log()
-        console.log(chalk.blue)
-
+        console.log(`Power: ${ptauFiles[i].power}, Max Constraints: ${ptauFiles[i].maxConstraints}`)
+        console.log(`Size: ${formatBytes(ptauFiles[i].size)}`)
+        console.log(`Supports built in ceremony server: ${i < 8 ? "YES" : "File too large"}`)
+        console.log("\n")
     }
+    console.log("Not all files are fully supported by the built in ceremony server due to their size. When using larger files, use a different ceremony strategy.\n")
+    console.log("You can find information about the files here: https://github.com/iden3/snarkjs?tab=readme-ov-file#7-prepare-phase-2")
 }
 
 
