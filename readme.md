@@ -1,13 +1,17 @@
 # NiftyBundles CLI
 A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark on-chain
 
-NiftyBundles CLI is used for development for different applications where valid transactions are predetermined and distributed off-chain.
+NiftyBundles CLI is used for development for different applications where valid transactions are predetermined and distributed off-chain to users.
+
 Use cases include
-* Airdrops where proofs are emailed or physically distributed and then can be claimed by consuming the proofs on-chain
-* NFTs attached to real world objects - similar to airdrops, an NFT could be attached to physical goods or assets that are tokenized on-chain which can be used to mint an NFT, transfer it or do a similar action
-* Combining blockchain with real life activities, games - Valid proofs could be distributed as qr codes over an area to enhance a physical game with blockchain rewards, scattered around cities for people to find checkpoints and use them to mint proof of attendance tokens.
-* Dead man's switches where proofs could be used to withdraw partial amounts of deposits for an on-chain will fulfillment system
+* Airdrops that can be emailed or physically distributed and then claimed later
+* NFTs attached to real world objects. It could be attached to physical goods or linked to servces.
+* Combining blockchain with real life activities like games - Valid proofs could be distributed as qr codes over an area to enhance a physical game with blockchain rewards, scattered around cities for people to find checkpoints and use them to mint proof of attendance tokens.
+* Pre-minting in-game assets
+* Dead man's switches where the recipients don't have to own a crypto wallet, bundled txs could represent the withdrawal of partial amounts of the total deposit.
 * Intent based architecture where the proofs represent future transactions that can be trustlessly processed by relayers using wallet abstraction
+* Voting systems where the bundle contains a right to vote, which can be distributed on multiple channels and decoupled from a wallet when voting to preserve on-chain anonymity, while the voting service can KYC at will
+
 And many more!
 
 Design decisions
