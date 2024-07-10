@@ -1,15 +1,16 @@
 const { Command } = require("commander");
 const figlet = require("figlet");
+const { explainPtauFiles } = require("./loaders/ptauLoader")
 console.log(figlet.textSync("NiftyBundles"))
 
 const program = new Command();
 program.version("0.0.1")
-    .description("Bundle future transactions into a fixed size merkle tree for off-chain distribution. Run zkp Ceremonies and Scaffold smart-contracts that validate merkle proofs using zksnark")
+    .description("Bundle future transactions into a fixed size merkle tree for off-chain distribution. Run zkp Ceremonies and Scaffold smart-contracts that validate merkle proofs using zksnarks")
     .name("NiftyBundles")
 
 program
     .command("init")
-    .description("Initialize the project, install dependencies, generate a new circom circuit with optional added public inputs prepare for the circuit specific powers of tau phase-2 ceremony")
+    .description("Initialize the project, install dependencies, generate a new circom circuit with optional added public inputs and prepare for the circuit specific powers of tau phase-2 ceremony")
     .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
     .action((str, options) => {
         //TODO: Do the initialization and generate the circuit
@@ -19,11 +20,21 @@ program
         //Generate the circuit with the specified public inputs
         //Prompt the user to download the .ptau file
         //Prepare for circuit specific ceremony
+        console.log("init runs")
     })
 
 program
-    .command("ceremonyserver")
+    .command("ptaufiles")
+    .description("Display information about the downloadable ptau files")
+    .action(() => {
+        explainPtauFiles()
+    })
+
+
+program
+    .command("ceremony")
     .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website")
+    .option("--ngrok","Host the server locally using ngrok")
     .option("--port", "The port to host the ceremony")
     .option("--page", "Path to a html component to customize the hosted ceremony page")
     .action(() => {
@@ -55,7 +66,7 @@ program.command("gencontract")
     .option("--bundle", "Specify the path of the bundle to generate a smart contract for.")
     .option("--cosmwasm", "Generate a cosmwasm smart contract template")
     .option("--solidity", "Generate a solidity smart contract template")
-    .action(() => { 
+    .action(() => {
         //Generate the smart contract, this should be rerun when the circuit is finalized always
         //Output the generated contracts
     })
