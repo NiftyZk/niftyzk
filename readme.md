@@ -1,3 +1,5 @@
+![niftybundles logo](niftybundles-logo.webp)
+
 # NiftyBundles CLI
 A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark on-chain
 
