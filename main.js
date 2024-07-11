@@ -1,6 +1,8 @@
 const { Command } = require("commander");
 const figlet = require("figlet");
+const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = require("./lib/init/packages");
 const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
+
 console.log(figlet.textSync("NiftyBundles"))
 
 const program = new Command();
@@ -10,18 +12,21 @@ program.version("0.0.1")
 
 program
     .command("init")
-    .description("Initialize the project, install dependencies, generate a new circom circuit with optional added public inputs and prepare for the circuit specific powers of tau phase-2 ceremony")
-    .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
-    .action((str, options) => {
-        //Check for a package.json in the local directory or run npm init and create it
+    .description("Initialize the project with a name and install dependencies")
+    .action(async (_, options) => {
 
-        //TODO: Do the initialization and generate the circuit
-        //Add new dependencies, circomlibjs, circom, ffjavascript, snarkjs
-        //Run npm install
-        //Generate the circuit with the specified public inputs
-        //Prompt the user to download the .ptau file
-        //Prepare for circuit specific ceremony
-        console.log("init runs")
+       async function onSuccess() {
+
+            if (options.args.length === 0) {
+                await setupWithCurrentDir();
+            } else {
+                const dirname = options.args[0];
+                await setupWithNewDir(dirname)
+            }
+        }
+
+        checkIfCircomIsInstalled(onSuccess)
+
     })
 
 program
@@ -32,6 +37,13 @@ program
         selectPtauFileToDownload()
     })
 
+program.command("gencircuit")
+    .description("Generate the circuit to use with a nifty bundle")
+    .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
+
+    .action(() => {
+
+    })
 
 program
     .command("ceremony")
@@ -43,7 +55,7 @@ program
         //Run the the ceremony server
     })
 
-program.command("finalize")
+program.command("finalizecircuit")
     .description("Finalize the circuit after the phase2 ceremony is finished")
     .action(() => {
         //Run circom to finalize the circuit
