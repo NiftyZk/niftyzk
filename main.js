@@ -1,11 +1,11 @@
 const { Command } = require("commander");
 const figlet = require("figlet");
-const { explainPtauFiles } = require("./loaders/ptauLoader")
+const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
 console.log(figlet.textSync("NiftyBundles"))
 
 const program = new Command();
 program.version("0.0.1")
-    .description("Bundle future transactions into a fixed size merkle tree for off-chain distribution. Run zkp Ceremonies and Scaffold smart-contracts that validate merkle proofs using zksnarks")
+    .description("Bundle future transactions into a fixed size merkle tree for off-chain distribution. Run zkp Ceremonies and generate verifier smart-contracts that validate merkle proofs using zksnarks")
     .name("NiftyBundles")
 
 program
@@ -13,8 +13,9 @@ program
     .description("Initialize the project, install dependencies, generate a new circom circuit with optional added public inputs and prepare for the circuit specific powers of tau phase-2 ceremony")
     .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
     .action((str, options) => {
-        //TODO: Do the initialization and generate the circuit
         //Check for a package.json in the local directory or run npm init and create it
+
+        //TODO: Do the initialization and generate the circuit
         //Add new dependencies, circomlibjs, circom, ffjavascript, snarkjs
         //Run npm install
         //Generate the circuit with the specified public inputs
@@ -28,13 +29,14 @@ program
     .description("Display information about the downloadable ptau files")
     .action(() => {
         explainPtauFiles()
+        selectPtauFileToDownload()
     })
 
 
 program
     .command("ceremony")
     .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website")
-    .option("--ngrok","Host the server locally using ngrok")
+    .option("--ngrok", "Host the server locally using ngrok")
     .option("--port", "The port to host the ceremony")
     .option("--page", "Path to a html component to customize the hosted ceremony page")
     .action(() => {
