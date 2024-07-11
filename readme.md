@@ -28,10 +28,11 @@ It currently supports groth16 proving system with cosmwasm contracts and it's ai
 It depends on nodejs and npm and will install additional dependencies to package.json including circom, circomlibjs, snarkjs
 # Commands
 
-`niftybundles init` - Run the initialization script to scaffold a new project or alternatively add the dependencies to the local directory. This command will generate the circuits and accepts additional inputs for circom circuit templating
-The users are prompted to download a ptau file which is needed for the ceremony
+`niftybundles init` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json. 
 
-`niftybundles ptaufiles` - Display information about the ptau files available for download, used for the powers of tau ceremnoy. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository
+`niftybundles ptaufiles` - Display information and download ptau files, used for the powers of tau ceremnoy. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
+
+`niftybundles gencircuit` - Generate the circom circuit to use with a nifty bundle
 
 `niftybundles ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The ceremony server hosts a webpage that allows for contributions and supports ngrok for local hosting
 
