@@ -1,6 +1,6 @@
 pragma circom 2.0.0;
 
-include "./poseidon.circom";
+include "../../node_modules/circomlib/circuits/poseidon.circom";
 
 template CommitmentHasher(){
     signal input nullifier;
