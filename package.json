@@ -1,5 +1,5 @@
 {
-  "name": "niftybundles",
+  "name": "nifty-zk",
   "version": "0.0.1",
   "description": "A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark",
   "main": "main.js",
