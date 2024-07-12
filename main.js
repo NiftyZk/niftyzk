@@ -2,7 +2,7 @@ const { Command } = require("commander");
 const figlet = require("figlet");
 const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = require("./lib/init/packages");
 const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
-
+const chalk = require("chalk")
 console.log(figlet.textSync("NiftyBundles"))
 
 const program = new Command();
@@ -12,10 +12,10 @@ program.version("0.0.1")
 
 program
     .command("init")
-    .description("Initialize the project with a name and install dependencies")
+    .description("Initialize a new project")
     .action(async (_, options) => {
 
-       async function onSuccess() {
+        async function onSuccess() {
 
             if (options.args.length === 0) {
                 await setupWithCurrentDir();
@@ -23,6 +23,7 @@ program
                 const dirname = options.args[0];
                 await setupWithNewDir(dirname)
             }
+            console.log(`Run ${chalk.blue("npm install")} in your project folder`)
         }
 
         checkIfCircomIsInstalled(onSuccess)
@@ -42,7 +43,7 @@ program.command("gencircuit")
     .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
 
     .action(() => {
-
+        //TODO: Generate the circom circuit and also the merkle tree client side javascript and circomjs
     })
 
 program
