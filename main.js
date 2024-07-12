@@ -2,7 +2,8 @@ const { Command } = require("commander");
 const figlet = require("figlet");
 const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = require("./lib/init/packages");
 const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
-const chalk = require("chalk")
+const chalk = require("chalk");
+const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
 console.log(figlet.textSync("NiftyBundles"))
 
 const program = new Command();
@@ -40,10 +41,8 @@ program
 
 program.command("gencircuit")
     .description("Generate the circuit to use with a nifty bundle")
-    .option("-i, --publicInputs", "Optional public inputs for the circuit, comma separated list", ",")
-
     .action(() => {
-        //TODO: Generate the circom circuit and also the merkle tree client side javascript and circomjs
+        circuitPrompts()
     })
 
 program
