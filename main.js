@@ -4,7 +4,7 @@ const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = requi
 const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
 const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
-console.log(figlet.textSync("NiftyBundles"))
+console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
 program.version("0.0.1")
