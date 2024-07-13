@@ -4,6 +4,7 @@ const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = requi
 const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
 const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
+const { compileCircuits } = require("./lib/compile/runcompiler");
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
@@ -45,9 +46,19 @@ program.command("gencircuit")
         circuitPrompts()
     })
 
-program.command("genwitness")
-    .description("Compile the circuits and generate the witness")
-    .action(() => { })
+program.command("compile")
+    .description("Compile the circuits")
+    .option("--circuit [path]", "Specify the location for the circuit. Defaults to circuits/circuit.circom")
+    .action((options, command) => {
+        if (options.circuit) {
+            //Path was specified. compile circuit with that path
+            compileCircuits(options.circuit)
+        } else {
+            //Use default path
+            compileCircuits("")
+        }
+
+    })
 
 program
     .command("ceremony")
