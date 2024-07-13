@@ -45,6 +45,10 @@ program.command("gencircuit")
         circuitPrompts()
     })
 
+program.command("genwitness")
+    .description("Compile the circuits and generate the witness")
+    .action(() => { })
+
 program
     .command("ceremony")
     .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website")
@@ -59,20 +63,6 @@ program.command("finalizecircuit")
     .description("Finalize the circuit after the phase2 ceremony is finished")
     .action(() => {
         //Run circom to finalize the circuit
-    })
-
-program.command("genbundle")
-    .description("Generate a fixed size merkle tree with it's leaves containing the future transactions")
-    .option("--parameters", "Extra parameters for the bundle")
-    .option("--qrcode", "Generate QRCodes")
-    .action(() => {
-        //Generate a merkle tree
-        //Add the optional parameters
-        //Generate the public tree leaves and root that should be shared to compute proofs
-        //Generate the secrets contained in the tree
-        //Generate QRcodes for the secrets
-        //Generate the javascript regex parser for the NiftyBundle
-        //Generate a client side dependency to import into a website via a script tag or normal import
     })
 
 program.command("gencontract")
