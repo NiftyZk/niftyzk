@@ -1,6 +1,6 @@
 var assert = require('assert');
-const { getVerifierCircuit, getExtraPublicInputs } = require("../lib/templates/circom/template");
-
+const { getVerifierCircuit } = require("../lib/templates/circom/template");
+const { getExtraPublicInputs } = require("../lib/templates/circom/utils")
 
 describe('Circom template generation', function () {
     describe('adding extra signal inputs', function () {
@@ -85,6 +85,7 @@ component main {public [nullifierHash,commitmentHash,recipient,root,price,amount
             const verifierCircuit = getVerifierCircuit(extraInputNames)
 
             assert.equal(verifierCircuit, expectedResult)
+            
         })
     });
 });
