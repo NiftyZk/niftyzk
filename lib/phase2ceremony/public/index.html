@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.6cd63bf6.css">
+    <title>NiftyZK</title>
+</head>
+
+<body>
+    <section class="column-center">
+        <div class="shadow marginAuto width700px">
+            <div class="padding50px column-center width400px marginAuto ">
+                <h3 class="textAlign-center">Contribute to a Phase 2 Ceremony</h3>
+                <h4 class="textAlign-center">Used for a Groth16 zk-SNARK proving system.</h4>
+                <h5>Fill out the form, add a name. The name will be hashed and added to the logs. You will be prompted
+                    to enter some entropy then wait for your turn! </h5>
+                <div class="spacer"></div>
+                <label for="nameInput">Enter a Name</label>
+                <input class="type-1" id="nameInput" placeholder="name" type="text">
+                <div class="spacer"></div>
+                <div class="spacer"></div>
+                <div class="textAlign-center" id="messageDisplay"></div>
+                <button class="button-27" role="button" id="enterCeremony">Enter ceremony</button>
+                <div class="column-center width400px marginAuto ">
+                    <h4>Contribution logs are stored on the server</h4>
+                    <a href="/log">You can download the log file here</a>
+                    <p>To find your contribution sha256 hash the name you entered.</p>
+                </div>
+            </div>
+            <br>
+        </div>
+    </section>
+</body>
+<script src="/frontend.b1b61ec1.js"></script>
+
+<script src="/snarkjs.min.js"></script>
+<script src="/snarkjs.min.js"></script>
+</html>
