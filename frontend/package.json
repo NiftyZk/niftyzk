@@ -1,0 +1,27 @@
+{
+    "name": "frontend",
+    "version": "0.0.2",
+    "description": "",
+    "browserslist": "> 0.5%, last 2 versions, not dead",
+    "main": "index.ts",
+    "scripts": {
+        "dev": "parcel index.html",
+        "build": "parcel build  index.html --target browser --no-minify && sh copyToServer.sh"
+    },
+    "keywords": [],
+    "author": "niftyzk",
+    "license": "MIT",
+    "devDependencies": {
+        "buffer": "^5.7.1",
+        "constants-browserify": "^1.0.0",
+        "os-browserify": "^0.3.0",
+        "parcel-bundler": "^1.12.5",
+        "stream-browserify": "^3.0.0"
+    },
+    "dependencies": {
+        "crypto-browserify": "^3.12.0",
+        "ffjavascript": "^0.2.57",
+        "snarkjs": "^0.6.11",
+        "socket.io-client": "^4.6.1"
+    }
+}

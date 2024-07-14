@@ -1,0 +1,127 @@
+section {
+    width: 100%;
+}
+
+button {
+    margin: 0 auto;
+}
+
+img {
+    margin: 0 auto;
+}
+
+input {
+    display: block;
+    /* width: 100%; */
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.type-1 {
+    border-radius: 10px;
+    border: 1px solid #eee;
+    transition: .3s border-color;
+}
+
+.type-1:hover {
+    border: 1px solid #aaa;
+}
+
+.spacer {
+    margin-top: 20px;
+}
+
+.column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.width400px {
+    max-width: 400px;
+}
+
+.width700px {
+    max-width: 700px;
+}
+
+.padding50px{
+    padding: 50px;
+}
+
+.marginAuto {
+    margin: 0 auto;
+}
+
+.textAlign-center {
+    text-align: center;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+/* CSS */
+.button-27 {
+    appearance: none;
+    background-color: #000000;
+    border: 2px solid #1A1A1A;
+    border-radius: 15px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 60px;
+    width: "200px";
+    outline: none;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+    will-change: transform;
+}
+
+.button-27:disabled {
+    pointer-events: none;
+}
+
+.button-27:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.button-27:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.shadow {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+#messageDisplay{
+    margin-bottom: 25px;
+    font-size: x-large;
+    
+}
