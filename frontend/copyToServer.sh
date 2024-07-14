@@ -1,5 +1,5 @@
 node addLine.js
 
-cp -r ./dist/* ../server/public/
+cp -r ./dist/* ../lib/phase2ceremony/public/
 
-cp ./snarkjs.min.js ../server/public/snarkjs.min.js
+cp ./snarkjs.min.js ../lib/phase2ceremony/public/snarkjs.min.js
