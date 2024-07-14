@@ -67,7 +67,7 @@ program
     .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website. Default port is 3000. Prefix the command with PORT=number to change the default port")
     .action(() => {
         //Run the the ceremony server
-        //TODO: PORT
+        //TODO:Ask for which ptau file to use if there are multiple ones downloaded!
         runServer()
     })
 
