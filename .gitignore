@@ -1,1 +1,5 @@
 node_modules
+ptau
+frontend/.cache
+frontend/dist
+frontend/node_modules
