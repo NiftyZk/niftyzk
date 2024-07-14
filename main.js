@@ -5,12 +5,14 @@ const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/pt
 const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
 const { compileCircuits } = require("./lib/compile/runcompiler");
+const { runServer } = require("./lib/phase2ceremony/server");
+
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
 program.version("0.0.1")
-    .description("Bundle future transactions into a fixed size merkle tree for off-chain distribution. Run zkp Ceremonies and generate verifier smart-contracts that validate merkle proofs using zksnarks")
-    .name("NiftyBundles")
+    .description("Scaffold a new Circom project, compile and run phase-2 ceremonies. Generate a verifier written in rust for Groth-16 proving system.")
+    .name("niftyzk")
 
 program
     .command("init")
@@ -41,7 +43,7 @@ program
     })
 
 program.command("gencircuit")
-    .description("Generate the circuit to use with a nifty bundle")
+    .description("Generate circom circuits and javascript tests")
     .action(() => {
         circuitPrompts()
     })
@@ -62,25 +64,21 @@ program.command("compile")
 
 program
     .command("ceremony")
-    .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website")
-    .option("--ngrok", "Host the server locally using ngrok")
-    .option("--port", "The port to host the ceremony")
-    .option("--page", "Path to a html component to customize the hosted ceremony page")
+    .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website. Default port is 3000. Prefix the command with PORT=number to change the default port")
     .action(() => {
         //Run the the ceremony server
+        //TODO: PORT
+        runServer()
     })
 
-program.command("finalizecircuit")
+program.command("finalize")
     .description("Finalize the circuit after the phase2 ceremony is finished")
     .action(() => {
         //Run circom to finalize the circuit
     })
 
-program.command("gencontract")
-    .description("Generate the cosmwasm or solidity smart contracts to verify the transactions on-chain for the bundle")
-    .option("--bundle", "Specify the path of the bundle to generate a smart contract for.")
-    .option("--cosmwasm", "Generate a cosmwasm smart contract template")
-    .option("--solidity", "Generate a solidity smart contract template")
+program.command("genverifier")
+    .description("Generate a Rust verifier, compatible with cosmwasm smart contracts")
     .action(() => {
         //Generate the smart contract, this should be rerun when the circuit is finalized always
         //Output the generated contracts
