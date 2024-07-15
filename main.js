@@ -74,9 +74,28 @@ program
 
 program.command("finalize")
     .description("Finalize the circuit after the phase2 ceremony is finished")
-    .action(() => {
-        //Run circom to finalize the circuit
-        finalize()
+    .option("-b, --beacon [string]", "A random beacon to use for finalizing the ceremony. For example a block hash or a hex number outputted by a Verifiable Delay Function (VDF)")
+    .option("-i, --iter [num]", "Number of iterations")
+    .option("-n, --name [string]", "The name of the final contribution")
+    .action(async (options) => {
+        if (!options.beacon) {
+            console.log(chalk.red("Missing beacon option"))
+            return;
+        }
+        console.log(options)
+        if (typeof options.beacon === "boolean") {
+            console.log("Missing beacon value")
+            return;
+        }
+
+        if (options.beacon.length < 10) {
+            console.log(chalk.red("Beacon too short"))
+            return;
+        }
+
+        //TODO: Check if the beacon is a valid hex string
+
+        await finalize(options.beacon, options.iter, options.name)
     })
 
 program
@@ -86,6 +105,10 @@ program
     .action(async (options) => {
         await verificationKey(options.final ?? false).then(() => process.exit(0))
     })
+
+// program.command("clean")
+// .description("Delete parts of the project")
+// .option
 
 program.command("genverifier")
     .description("Generate a Rust verifier, compatible with cosmwasm smart contracts")
