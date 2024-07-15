@@ -1,9 +1,7 @@
-![niftybundles logo](niftybundles-logo.webp)
+![niftyzk logo](niftybundles-logo.webp)
 
-# NiftyBundles CLI
-A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark on-chain
-
-NiftyBundles CLI is used for development for different applications where valid transactions are predetermined and distributed off-chain to users.
+# NiftyZK CLI
+A tool circom scaffolding tool, phase2 ceremony server and verifier generator to accelerate zero knowledge proof development in rust based chains.
 
 Use cases include
 * Airdrops that can be emailed or physically distributed and then claimed after
@@ -28,17 +26,14 @@ It currently supports groth16 proving system with cosmwasm contracts and it's ai
 It depends on nodejs and npm and will install additional dependencies to package.json including circom, circomlibjs, snarkjs
 # Commands
 
-`niftybundles init` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json. 
+`niftyzk init` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json. 
 
-`niftybundles ptaufiles` - Display information and download ptau files, used for the powers of tau ceremnoy. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
+`niftyzk ptaufiles` - Display information and download ptau files, used for the powers of tau ceremnoy. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
 
-`niftybundles gencircuit` - Generate the circom circuit to use with a nifty bundle
+`niftyzk gencircuit` - Generate the circom circuit to use with a nifty bundle
 
-`niftybundles ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The ceremony server hosts a webpage that allows for contributions and supports ngrok for local hosting
+`niftyzk ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The ceremony server hosts a webpage that allows for contributions and supports ngrok for local hosting
 
-`niftybundles finalize` - Run the finalization for the circuits after the phase2 ceremony has been finished
+`niftyzk finalize` - Run the finalization for the circuits after the phase2 ceremony has been finished
 
-`niftybundles genbundle` - Generate a fixed sized merkle tree transaction bundle. This will generate the secrets used for the proving system, the public merkle tree and generates client side code for parsing the secrets in the format of crypto notes.
-It will generate a client side dependency for parsing bundled crypto notes
-
-`niftybundles gencontract` - Generate the smart contract used for verifying the proofs created with the bundle. Supports cosmwasm and solidity contracts
+`niftyzk genverifier` - Generate cosmwasm smart contract used for verifying the proofs 
