@@ -6,6 +6,8 @@ const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
 const { compileCircuits } = require("./lib/compile/runcompiler");
 const { runServer } = require("./lib/phase2ceremony/server");
+const { finalize } = require("./lib/compile/finalize");
+const { verificationKey } = require("./lib/compile/verificationkey");
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -67,7 +69,6 @@ program
     .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website. Default port is 3000. Prefix the command with PORT=number to change the default port")
     .action(() => {
         //Run the the ceremony server
-        //TODO:Ask for which ptau file to use if there are multiple ones downloaded!
         runServer()
     })
 
@@ -75,6 +76,15 @@ program.command("finalize")
     .description("Finalize the circuit after the phase2 ceremony is finished")
     .action(() => {
         //Run circom to finalize the circuit
+        finalize()
+    })
+
+program
+    .command("verificationkey")
+    .description("Generate the verification key for this circuit")
+    .option("--final", "Export the final verification key after the phase2 ceremony")
+    .action(async (options) => {
+        await verificationKey(options.final ?? false).then(() => process.exit(0))
     })
 
 program.command("genverifier")
