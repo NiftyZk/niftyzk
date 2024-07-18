@@ -112,6 +112,7 @@ program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
+    .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
     .action(async (options) => {
 
         if (!options.ark && !options.bellman) {
@@ -122,8 +123,9 @@ program.command("gencontract")
             console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
             return;
         }
-        await genContract(options)
 
+
+        await genContract(options)
     })
 
 program.parse();
