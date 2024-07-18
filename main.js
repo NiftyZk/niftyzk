@@ -8,6 +8,7 @@ const { compileCircuits } = require("./lib/compile/runcompiler");
 const { runServer } = require("./lib/phase2ceremony/server");
 const { finalize } = require("./lib/compile/finalize");
 const { verificationKey } = require("./lib/compile/verificationkey");
+const { genContract } = require("./lib/compile/contract");
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -106,15 +107,23 @@ program
         await verificationKey(options.final ?? false).then(() => process.exit(0))
     })
 
-// program.command("clean")
-// .description("Delete parts of the project")
-// .option
 
-program.command("genverifier")
-    .description("Generate a Rust verifier, compatible with cosmwasm smart contracts")
-    .action(() => {
-        //Generate the smart contract, this should be rerun when the circuit is finalized always
-        //Output the generated contracts
+program.command("gencontract")
+    .description("Generate a cosmwasm verifier smart contract")
+    .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
+    .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
+    .action(async (options) => {
+
+        if (!options.ark && !options.bellman) {
+            console.log(chalk.red("You need to use either --ark or --bellman implementations!"))
+            return;
+        }
+        if (options.ark && options.bellman) {
+            console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
+            return;
+        }
+        await genContract(options)
+
     })
 
 program.parse();
