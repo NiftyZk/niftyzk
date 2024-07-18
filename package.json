@@ -34,5 +34,8 @@
   },
   "devDependencies": {
     "mocha": "^10.6.0"
+  },
+  "bin": {
+    "niftyzk": "bin/niftyzk"
   }
 }
