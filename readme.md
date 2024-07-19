@@ -71,8 +71,6 @@ Verify the contract.wasm using the cosmwasm-check utility
 
 [] Merkle Tree utils and tooling to generate fixed-sized trees
 
-[] Generate Crypto Note parsers. An encoding format for secrets, for other use-cases for crypto notes, see a DApp at https://bunnynotes.finance) 
-
 [] Optimized smart contracts
 
 [] Support for both bls12_381 curves
