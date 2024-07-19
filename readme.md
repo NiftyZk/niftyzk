@@ -46,6 +46,19 @@ The libraries used for generating the contracts are either --bellman or --ark .
 Specify the directory for the contracts using the --folder flag. When using the same folder, the project will be overwritten completely and so you must explicitly allow it using the --overwite flag. 
 If you developed a custom cosmwasm contract but want to generate a new one with a new key, always use a different folder and then merge them manually!
 
+## Checking the generated contracts
+Install the wasm rust compiler backend:
+`rustup target add wasm32-unknown-unknown`
+
+Run `cargo test` to run the generated  tests
+
+Build the contracts using `cargo wasm`
+
+Verify the contract.wasm using the cosmwasm-check utility
+`cargo install cosmwasm-check`
+
+`cosmwasm-check ./target/wasm32-unknown-unknown/release/contract.wasm`
+
 # Roadmap:
 
 [] More circuit generation parameters
