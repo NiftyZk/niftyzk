@@ -1,14 +1,17 @@
 {
-  "name": "nifty-zk",
-  "version": "0.0.1",
-  "description": "A tool to bundle future transactions into a fixed size merkle tree and validate merkle proofs using a zksnark",
+  "name": "niftyzk",
+  "version": "0.1.0",
+  "description": "A tool to scaffold and compile circom projects, run Powers of Tau Phase 2 ceremonies and generate cosmwasm contracts",
+  "repository": {
+    "url": "https://github.com/StrawberryChocolateFudge/niftyzk.git",
+    "type": "git"
+  },
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "test": "mocha",
-    "build": ""
+    "test": "mocha"
   },
-  "author": "NiftyBundles",
+  "author": "StrawberryChocolateFudge",
   "license": "MIT",
   "dependencies": {
     "@npmcli/package-json": "^5.2.0",
