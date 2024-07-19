@@ -1,39 +1,70 @@
-![niftyzk logo](niftybundles-logo.webp)
-
+![niftyzk logo](./NiftyZkIcon.png)
 # NiftyZK CLI
-A tool circom scaffolding tool, phase2 ceremony server and verifier generator to accelerate zero knowledge proof development in rust based chains.
+**Scaffold a new Circom project, generate circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve**
 
-Use cases include
-* Airdrops that can be emailed or physically distributed and then claimed after
-* NFTs attached to real world objects. A QR code could be attached to physical goods. E.g: A bottle of wine with a qr code to mint an nft
-* Combining blockchain with real life activities like games - Physically discoverable transactions distributed over an area to enhance a physical game with blockchain rewards.Qr codes scattered around in cities or placed in mazes for people to find checkpoints, use them to mint proof of attendance tokens etc.
-* Pre-minting in-game assets which could be purchased with traditional finance.
-* Dead man's switches or other deposits where the bundled txs could represent partial amounts of the total deposit.
-* Intent based architecture where the proofs represent future transaction intents that can be trustlessly processed by relayers using wallet abstraction
-* Voting systems where the bundle contains a right to vote, which can be distributed on multiple channels and decoupled from a wallet when voting, to preserve on-chain anonymity.
+## Dependencies
 
-And many more!
+The application requires Rust, Circom and Nodejs to be installed.
+
+Follow the installation guide for Circom
+https://docs.circom.io/getting-started/installation/
 
 # Features
 
-The application is a command line toolkit aimed at developers to add to their projects. 
-It is  a zero code circom code generating tool, bundle and merkle tree generator, smart contract creator and powers of tau ceremony server.
-It also generates dependencies for front end integration and allows users to fully manage their bundles.
+This is a command line toolkit for developers starting out using circom and writing contracts for the cosmos ecosystem. 
 
-It currently supports groth16 proving system with cosmwasm contracts and it's aimed to be used together with another scaffolding tool for the smart contract environment, it will generate a verifier contract but the actual implementation is left to the developer
+It currently supports groth16 proving system with a BN128 curve and generates 2 cosmwasm contracts contracts. One with the Arkworks Groth16 Rust dependency, the other using Bellman, the fork maintained by DoraFactory.
+Using the Bellman based contract requires an adapter for the verification key and proofs, which will be auto generated for you.
 
-# Dependencies
-It depends on nodejs and npm and will install additional dependencies to package.json including circom, circomlibjs, snarkjs
 # Commands
 
-`niftyzk init` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json. 
+`niftyzk help`  - Display the help text
 
-`niftyzk ptaufiles` - Display information and download ptau files, used for the powers of tau ceremnoy. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
+`niftyzk init [projectname]` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json if you ommit the projectname.
+The dependencies for the project are circomlib, circomlibjs,ffjavascript and snarkjs. Tests are ran using Jest,
 
-`niftyzk gencircuit` - Generate the circom circuit to use with a nifty bundle
+`niftyzk ptaufiles` - Display information and download powers of tau files. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
+A ptau file is required to compile circuits and proceed with the phase2 ceremony which is circuit specific. Not all downloadable files are compatible with the built in phase-2 ceremony due to their size. Never commit your ptau files, instead download them each time you use the project.
 
-`niftyzk ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The ceremony server hosts a webpage that allows for contributions and supports ngrok for local hosting
+`niftyzk gencircuit` - Generate the circom circuit with the option to add extra parameters. This will scaffold a circuit with a commitment reveal scheme using 2 secret inputs,`secret and nullifier` and public inputs `nullifierHash and commitmentHash`. The circuit was developed for on-chain use, where the knowledge of the commitmentHash preimage is proven using a zkSnark, while the nullifierHash is used for avoiding proof replay. Different nullification strategies could be also used. You are free to edit the circuits.
+The extra parameters added will be used in hidden signals in the proof, to create tamper proof inputs, for example a withdrawal address. This makes the functions consuming zksnarks front run resistant.
 
-`niftyzk finalize` - Run the finalization for the circuits after the phase2 ceremony has been finished
+`niftyzk compile` - Compiles the circuits using circom with a BN128 curve and prepares the project for the phase-2 ceremony. The compiled circuit path defaults to circuit.circom but can be changed using the --circuit [path] flag.
+After compilation, you can jump to creating the verificationkey and generating a contract for development or proceed with the phase-2 ceremony, after which the circuits can't be changed again.
 
-`niftyzk genverifier` - Generate cosmwasm smart contract used for verifying the proofs 
+
+`niftyzk ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the sha256sum of the name they entered.
+
+`niftyzk finalize --beacon [string] --iter [num] --name [string]` - Run the finalization of the zkeys, after the phase2 ceremony has been finished. The --beacon flag is required. It must be a valid hexadecimal sequence, without 0x prefix. The --name is required, it's the name of the final contribution. The --iter flag is the number of iterations, defaults to 10. Finalize will output a final.zkey which contains the phase-2 contributions and can be used to generate the verification key.
+
+`niftyzk verificationkey --final` - Get the verificaiton key from the zkey. When ommitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag.
+
+`npm run test` - You must run the scaffolded tests to proceed before generating the contracts. The tests output test proofs used for generating tests in Rust for the contracts. When developing circom circuits, always make sure the tests pass and output the required file.
+
+`niftyzk gencontract --bellman --ark --overwrite --folder [string]` - Generate cosmwasm smart contract used for verifying the proofs. This must be ran after the verification_key.json has been generated and the tests successfully pass!.
+The libraries used for generating the contracts are either --bellman or --ark . 
+Specify the directory for the contracts using the --folder flag. When using the same folder, the project will be overwritten completely and so you must explicitly allow it using the --overwite flag. 
+If you developed a custom cosmwasm contract but want to generate a new one with a new key, always use a different folder and then merge them manually!
+
+# Roadmap:
+
+[] More circuit generation parameters
+
+  * [] Choose hashing algorithms during scaffolding
+
+  * [] Choose a different nullifier hashing strategy 
+
+  * [] Support for Merkle trees in Circom
+
+[] Merkle Tree utils and tooling to generate fixed-sized trees
+
+[] Generate Crypto Note parsers. An encoding format for secrets, for other use-cases for crypto notes, see a DApp at https://bunnynotes.finance) 
+
+[] Optimized smart contracts
+
+[] Support for both bls12_381 curves
+
+[] Support for plonk
+
+[] Support for fflonk
+  
