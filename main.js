@@ -13,7 +13,7 @@ const { genContract } = require("./lib/compile/contract");
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
-program.version("0.0.1")
+program.version("0.1.0")
     .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
