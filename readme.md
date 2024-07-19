@@ -13,7 +13,7 @@ https://docs.circom.io/getting-started/installation/
 
 Install the npm module straight from github
 
-`npm install -g git+https://github.com/StrawberryChocolateFudge/niftyzk.git`
+`npm install -g git+https://github.com/NiftyZk/niftyzk.git`
 
 # Features
 
