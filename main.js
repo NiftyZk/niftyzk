@@ -14,7 +14,7 @@ console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
 program.version("0.0.1")
-    .description("Scaffold a new Circom project, compile and run phase-2 ceremonies. Generate a verifier written in rust for Groth-16 proving system.")
+    .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
 program
@@ -113,6 +113,7 @@ program.command("gencontract")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
+    .option("--folder [name]")
     .action(async (options) => {
 
         if (!options.ark && !options.bellman) {
@@ -121,6 +122,15 @@ program.command("gencontract")
         }
         if (options.ark && options.bellman) {
             console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
+            return;
+        }
+        if (!options.folder) {
+            console.log(chalk.red("Use the --folder flag to specify the name of the contract directory"))
+            return;
+        }
+
+        if (typeof options.folder !== "string") {
+            console.log(chalk.red("Must specify the name of the folder to generate the contracts to."))
             return;
         }
 
