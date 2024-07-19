@@ -9,6 +9,12 @@ The application requires Rust, Circom and Nodejs to be installed.
 Follow the installation guide for Circom
 https://docs.circom.io/getting-started/installation/
 
+# Install
+
+Install the npm module straight from github
+
+`npm install -g git+https://github.com/StrawberryChocolateFudge/niftyzk.git`
+
 # Features
 
 This is a command line toolkit for developers starting out using circom and writing contracts for the cosmos ecosystem. 
