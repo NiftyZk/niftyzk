@@ -113,7 +113,7 @@ program.command("gencontract")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
-    .option("--folder [name]")
+    .option("--folder [name]","Specify the name of the generated contract's folder")
     .action(async (options) => {
 
         if (!options.ark && !options.bellman) {
