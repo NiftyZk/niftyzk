@@ -2,6 +2,10 @@
 # NiftyZK CLI
 **Scaffold a new Circom project, generate circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve**
 
+Watch the explanation video here:
+
+https://www.youtube.com/watch?v=FxS9JD8gtyo
+
 ## Dependencies
 
 The application requires Rust, Circom and Nodejs to be installed.
