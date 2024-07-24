@@ -30,7 +30,7 @@ Using the Bellman based contract requires an adapter for the verification key an
 
 `niftyzk help`  - Display the help text
 
-`niftyzk init [projectname]` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json if you ommit the projectname.
+`niftyzk init [projectname]` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json if you omit the projectname.
 The dependencies for the project are circomlib, circomlibjs,ffjavascript and snarkjs. Tests are ran using Jest,
 
 `niftyzk ptaufiles` - Display information and download powers of tau files. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
@@ -39,27 +39,40 @@ A ptau file is required to compile circuits and proceed with the phase2 ceremony
 Optionally use the `--filename` flag to specify which file to download without waiting for a prompt to select it manually. Useful for automating the download of files.
 
 
-`niftyzk gencircuit` - Generate the circom circuit with the option to add extra parameters. This will scaffold a circuit with a commitment reveal scheme using 2 secret inputs,`secret and nullifier` and public inputs `nullifierHash and commitmentHash`. The circuit was developed for on-chain use, where the knowledge of the commitmentHash preimage is proven using a zkSnark, while the nullifierHash is used for avoiding proof replay. Different nullification strategies could be also used. You are free to edit the circuits.
-The extra parameters added will be used in hidden signals in the proof, to create tamper proof inputs, for example a withdrawal address. This makes the functions consuming zksnarks front run resistant.
+`niftyzk gencircuit` - Generate the circom circuit with the option to add extra parameters. This will scaffold a circuit with a commitment reveal scheme using 2 secret inputs,`secret and nullifier` and public inputs `nullifierHash and commitmentHash`. 
 
-`niftyzk compile` - Compiles the circuits using circom with a BN128 curve and prepares the project for the phase-2 ceremony. The compiled circuit path defaults to circuit.circom but can be changed using the --circuit [path] flag.
-After compilation, you can jump to creating the verificationkey and generating a contract for development or proceed with the phase-2 ceremony, after which the circuits can't be changed again.
+The circuit was developed for on-chain use, where the knowledge of the commitmentHash pre-image is proven using a zkSnark, while the nullifierHash is used for avoiding proof replay. Different nullification strategies could be also used. You should modify the circuits to fit your needs.
+
+The extra parameters added via input prompt will be used in hidden signals in the circuit to create tamper proof inputs. For example a withdrawal address which you don't want to hash into the commitment but still verify it's integrity. This makes the functions consuming zksnarks front run resistant and more versatile.
+
+`niftyzk compile` - Compiles the circuits using circom with a BN128 curve and prepares the project for the phase-2 ceremony. The compiled circuit path defaults to `circuit.circom` but can be changed using the `--circuit [path]` flag.
+After compilation, you can jump to creating the verification key and generating a contract for development or proceed with the phase-2 ceremony, after which the circuits can't be changed again.
 
 
-`niftyzk ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the sha256sum of the name they entered.
+`niftyzk ceremony` - Run a phase2 ceremony server for the circom circuits. It supports groth-16 proving system. The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the `sha256sum` of the name they entered.
 
 ![ceremony page](ceremonyPage.webp)
 
 `niftyzk finalize --beacon [string] --iter [num] --name [string]` - Run the finalization of the zkeys, after the phase2 ceremony has been finished. The --beacon flag is required. It must be a valid hexadecimal sequence, without 0x prefix. The --name is required, it's the name of the final contribution. The --iter flag is the number of iterations, defaults to 10. Finalize will output a final.zkey which contains the phase-2 contributions and can be used to generate the verification key.
 
-`niftyzk verificationkey --final` - Get the verificaiton key from the zkey. When ommitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag.
+`niftyzk verificationkey --final` - Get the verification key from the zkey. When omitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag. This command writes the `circuits/compiled/vk_meta.json` for the tests, so the tests will know which zkey to use when creating a proof.
 
 `npm run test` - You must run the scaffolded tests to proceed before generating the contracts. The tests output test proofs used for generating tests in Rust for the contracts. When developing circom circuits, always make sure the tests pass and output the required file.
+Tests require the verification key. The zkey used for exporting the verification_key.json must be written to `circuits/compiled/vk_meta.json` for the tests to know which zkey to use. You may change your tests to work differently, this was just used for convenience.
 
-`niftyzk gencontract --bellman --ark --overwrite --folder [string]` - Generate cosmwasm smart contract used for verifying the proofs. This must be ran after the verification_key.json has been generated and the tests successfully pass!.
-The libraries used for generating the contracts are either --bellman or --ark . 
-Specify the directory for the contracts using the --folder flag. When using the same folder, the project will be overwritten completely and so you must explicitly allow it using the --overwite flag. 
-If you developed a custom cosmwasm contract but want to generate a new one with a new key, always use a different folder and then merge them manually!
+`niftyzk gencontract --bellman --ark --overwrite --folder [string]` - Generate cosmwasm smart contract used for verifying the proofs. 
+
+This must be ran after the verification_key.json has been generated and the tests successfully passed because the files outputted from the tests are used for the Rust tests too!
+
+The library used for the verifier is either `--bellman` or `--ark` . 
+
+Specify the directory for the contracts using the `--folder` flag. When using the same folder, the contract will be overwritten completely and so you must explicitly allow that to happen using the `--overwrite` flag. 
+
+If you developed a custom cosmwasm contract already but want to generate a new one because you changed your circuits always use a different folder for the new contract, and then merge them manually where needed.
+
+Note: `gencontract` depends on a file `circuits/compiled/test_proof.json` for creating the Rust tests. This file is outputted by the javascript tests. It contains a valid proof and publicSignals and verificationKey that must match the verification_key.json file and pass the verification.. 
+
+If your tests can't write a file due to CI/CD or other reasons, you must make sure this file contains up to date data to generate valid Rust tests with. It is only used when creating a new Rust verifier.
 
 ## Checking the generated contracts
 Install the wasm rust compiler backend:
@@ -95,23 +108,34 @@ The circuits directory need to look like the following:
         └── circuit_0000.zkey
 ```
 
-# Roadmap:
+# Road map:
 
+```
 [] More circuit generation parameters
 
-  * [] Choose hashing algorithms during scaffolding
+   [] Choose hashing algorithms when running gencircuit
 
-  * [] Choose a different nullifier hashing strategy 
+   [] Choose between different nullifier hashing strategies and provide explanations for use-cases 
 
-  * [] Support for Merkle trees in Circom
+   [] Support for Merkle trees in Circom and Js, Unit Tests
 
-[] Merkle Tree utils and tooling to generate fixed-sized trees
+[] Merkle Tree utility commands
 
-[] Optimized smart contracts
+   [] Generate fixed-sized trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
 
-[] Support for both bls12_381 curves
+   [] Compute and Validate Merkle Proofs
 
-[] Support for plonk
+[] Crypto note support.
 
-[] Support for fflonk
-  
+   [] Tornado Cash Note style encoding for private inputs
+
+   [] Export custom javascript parsers for crypto note formats (format is based on CLI input)
+
+[] More optimized CosmWasm smart contracts
+
+[] Support for bls12_381 curve Rust verifier
+
+[] Support for plonk Rust verifier
+
+[] Support for fflonk Rust verifier
+```  
