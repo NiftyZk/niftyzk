@@ -48,6 +48,8 @@ After compilation, you can jump to creating the verificationkey and generating a
 
 `niftyzk ceremony` - Run a phase2 ceremony server for the circom curcuits. It supports groth-16 proving system. The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the sha256sum of the name they entered.
 
+![ceremony page](ceremonyPage.webp)
+
 `niftyzk finalize --beacon [string] --iter [num] --name [string]` - Run the finalization of the zkeys, after the phase2 ceremony has been finished. The --beacon flag is required. It must be a valid hexadecimal sequence, without 0x prefix. The --name is required, it's the name of the final contribution. The --iter flag is the number of iterations, defaults to 10. Finalize will output a final.zkey which contains the phase-2 contributions and can be used to generate the verification key.
 
 `niftyzk verificationkey --final` - Get the verificaiton key from the zkey. When ommitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag.
