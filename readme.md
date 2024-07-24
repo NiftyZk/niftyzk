@@ -2,6 +2,10 @@
 # NiftyZK CLI
 **Scaffold a new Circom project, generate circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve**
 
+Watch the explanation video here:
+
+https://www.youtube.com/watch?v=FxS9JD8gtyo
+
 ## Dependencies
 
 The application requires Rust, Circom and Nodejs to be installed.
@@ -31,6 +35,9 @@ The dependencies for the project are circomlib, circomlibjs,ffjavascript and sna
 
 `niftyzk ptaufiles` - Display information and download powers of tau files. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
 A ptau file is required to compile circuits and proceed with the phase2 ceremony which is circuit specific. Not all downloadable files are compatible with the built in phase-2 ceremony due to their size. Never commit your ptau files, instead download them each time you use the project.
+
+Optionally use the `--filename` flag to specify which file to download without waiting for a prompt to select it manually. Useful for automating the download of files.
+
 
 `niftyzk gencircuit` - Generate the circom circuit with the option to add extra parameters. This will scaffold a circuit with a commitment reveal scheme using 2 secret inputs,`secret and nullifier` and public inputs `nullifierHash and commitmentHash`. The circuit was developed for on-chain use, where the knowledge of the commitmentHash preimage is proven using a zkSnark, while the nullifierHash is used for avoiding proof replay. Different nullification strategies could be also used. You are free to edit the circuits.
 The extra parameters added will be used in hidden signals in the proof, to create tamper proof inputs, for example a withdrawal address. This makes the functions consuming zksnarks front run resistant.

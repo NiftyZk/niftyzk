@@ -1,7 +1,7 @@
 const { Command } = require("commander");
 const figlet = require("figlet");
 const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = require("./lib/init/packages");
-const { explainPtauFiles, selectPtauFileToDownload } = require("./lib/loaders/ptauLoader")
+const { explainPtauFiles, selectPtauFileToDownload, isValidPtauFilename, downloadPtauFile } = require("./lib/loaders/ptauLoader")
 const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
 const { compileCircuits } = require("./lib/compile/runcompiler");
@@ -13,7 +13,7 @@ const { genContract } = require("./lib/compile/contract");
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
-program.version("0.1.0")
+program.version("0.1.1")
     .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
@@ -39,10 +39,18 @@ program
 
 program
     .command("ptaufiles")
-    .description("Display information about the downloadable ptau files")
-    .action(() => {
-        explainPtauFiles()
-        selectPtauFileToDownload()
+    .description("Display information and download ptau files")
+    .option("-f, --filename [filename]", "The file to download")
+    .action(async (option) => {
+        if (
+            typeof option.filename === "string" &&
+            isValidPtauFilename(option.filename)) {
+            await downloadPtauFile(option.filename)
+        } else {
+            explainPtauFiles()
+            selectPtauFileToDownload()
+        }
+
     })
 
 program.command("gencircuit")
@@ -113,7 +121,7 @@ program.command("gencontract")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
-    .option("--folder [name]","Specify the name of the generated contract's folder")
+    .option("--folder [name]", "Specify the name of the generated contract's folder")
     .action(async (options) => {
 
         if (!options.ark && !options.bellman) {
