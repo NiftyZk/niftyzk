@@ -108,15 +108,20 @@ The circuits directory need to look like the following:
         └── circuit_0000.zkey
 ```
 
-# Road map:
+# Future Road map:
 
 ```
-[] More circuit generation parameters
-
-   [] Choose hashing algorithms when running gencircuit
 
 
-[] Merkle Tree utility commands
+[x] More circuit generation parameters
+
+   [x] Choose hashing algorithms when running gencircuit
+      [x] Poseidon
+      [x] Pedersen
+      [x] Mimc7
+      [x] MimcSponge 
+
+[] Merkle Trees and utility commands
 
    [] Merkle trees
 
