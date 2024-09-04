@@ -13,7 +13,7 @@ const { genContract } = require("./lib/compile/contract");
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
-program.version("0.1.1")
+program.version("0.1.2")
     .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
@@ -21,7 +21,6 @@ program
     .command("init")
     .description("Initialize a new project")
     .action(async (_, options) => {
-
         async function onSuccess() {
 
             if (options.args.length === 0) {
@@ -53,6 +52,9 @@ program
 
     })
 
+//TODO: Add flag to select hashing algorithm
+//TODO: Add a nullifier strategy to use a nonce vs just a nullifier and print a description
+//TODO: Add a flag to generate merkle tree or not
 program.command("gencircuit")
     .description("Generate circom circuits and javascript tests")
     .action(() => {
@@ -70,7 +72,6 @@ program.command("compile")
             //Use default path
             compileCircuits("")
         }
-
     })
 
 program

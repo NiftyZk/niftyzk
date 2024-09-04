@@ -115,23 +115,20 @@ The circuits directory need to look like the following:
 
    [] Choose hashing algorithms when running gencircuit
 
-   [] Choose between different nullifier hashing strategies and provide explanations for use-cases 
-
-   [] Support for Merkle trees in Circom and Js, Unit Tests
 
 [] Merkle Tree utility commands
 
-   [] Generate fixed-sized trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
+   [] Merkle trees
+
+   [] Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
 
    [] Compute and Validate Merkle Proofs
 
-[] Crypto note support.
-
-   [] Tornado Cash Note style encoding for private inputs
-
-   [] Export custom javascript parsers for crypto note formats (format is based on CLI input)
+   [] Spare merkle trees
 
 [] More optimized CosmWasm smart contracts
+
+[] CosmWasm contract templates
 
 [] Support for bls12_381 curve Rust verifier
 
