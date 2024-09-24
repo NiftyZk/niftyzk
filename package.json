@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "ffjavascript": "^0.3.0",
+    "circomlibjs": "^0.1.7",
     "figlet": "^1.7.0",
     "helmet": "^7.1.0",
     "inquirer": "^10.0.1",
