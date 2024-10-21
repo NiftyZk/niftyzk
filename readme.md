@@ -121,13 +121,13 @@ The circuits directory need to look like the following:
       [x] Mimc7
       [x] MimcSponge 
 
-[] Merkle Trees and utility commands
+[x] Merkle Trees and utility commands
 
-   [] Merkle trees
+   [x] Merkle trees
 
-   [] Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
+   []x Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
 
-   [] Compute and Validate Merkle Proofs
+   [x] Compute and Validate Merkle Proofs
 
    [] Spare merkle trees
 
