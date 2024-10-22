@@ -125,11 +125,14 @@ The circuits directory need to look like the following:
 
    [x] Merkle trees
 
-   []x Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
+   [x] Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
 
    [x] Compute and Validate Merkle Proofs
 
    [] Spare merkle trees
+
+[] EDDSA
+   [] EDDSA public key Merkle Tree
 
 [] More optimized CosmWasm smart contracts
 
@@ -141,3 +144,37 @@ The circuits directory need to look like the following:
 
 [] Support for fflonk Rust verifier
 ```  
+
+## Available Hash functions:
+
+* Poseidon Hash - Generally this is the recommended hash function to use
+* Pedersen Hash - Use this for pedersen commitments
+* MiMC7 and MiMCSponge - Requires a secret key to use which makes the use-case more limited
+
+## Fixed Merkle Tree
+ The fixed merkle tree uses no external dependencies. All functions (except the hash algorithms) are scaffolded in circom and javasscript.
+ Fixed size trees have fixed levels, which is the `TREELEVELS` variable in the Javascript code and it's the levels argument of the circom circuit. They must match. The levels specify the max size of the merkle tree, which influences the constraint generation for the circuit and it also specifies the size of the merkle proof.
+ The fixed size tree is always padded to the level size. Padding is done via duplicating the last leaf. 
+
+The scaffolded project will contain merkle tree utility functions which can you can run via npm
+
+`npm run new` will create a new merkle tree, using the selected hash algorithm
+
+`npm run proof` will ask for the merkle root and a leaf (commitment) and output a merkle proof
+
+`npm run verify` will take a root and a proof and verify the validity of the proof.
+
+The code used for these commands is portable between nodejs and the browser.
+
+When running npm run new, a new merkle tree will be saved to the local folder. The secrets used to create the commitments are stored in the `private` directory under the name of the merkle root. Do not check that file into git. The merkle tree leaves and a tree (which can be cached to avoid recomputing it, will be saved to the `public` folder with the merkle root as a name.
+
+
+## Use-cases
+The basic scaffold contains a commitment reveal scheme, which can be used for Account Abstraction, Identity, Privacy and other use-cases.
+When using it with a merkle tree, the same use-cases exist but allow for others like Airdrops and Scaling. A merkle tree could contain multiple Identities or Deposits for which the ownership could be proven.
+
+## Nullifier strategies
+The nullifier scaffolded for the commitment reveal scheme is used to nullify the commitment on chain, which allows to mitigate double spending attacks for example. The commitment is hash(secret, nullifier) while the nullifierHash is hash(nullifier).
+
+If the commitment is reusable because of the use-case of the DApp, e.g: it controls a reusable wallet, then a different nullifier strategy can be used, like: commitment = hash(secret, nullifier), nullifierHash = hash(nullifier, nonce), in this case the nonce is a random secret number, which makes the nullification reusable. Each time the user reveals the knowledge of the secret behind the commitment, the nullifierHash is a new value, while it stays linked to the commitment.
+Experiment with different strategies to suit your use-case.
