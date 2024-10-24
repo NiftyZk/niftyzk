@@ -145,6 +145,10 @@ The circuits directory need to look like the following:
 [] Support for fflonk Rust verifier
 ```  
 
+## Next Release
+0.1.4 will contain a scaffolded dev.js file to use `circom_tester`. It lets developers iterate faster than compiling and running unit tests.
+It will work with the `npm run dev` command inside the scaffolded directory. Optionally it will watch the circuits directory with fs.watch and rerun each time a circom file has changed. Kind of like a hot reload style development experience.
+
 ## Available Hash functions:
 
 * Poseidon Hash - Generally this is the recommended hash function to use
@@ -178,3 +182,4 @@ The nullifier scaffolded for the commitment reveal scheme is used to nullify the
 
 If the commitment is reusable because of the use-case of the DApp, e.g: it controls a reusable wallet, then a different nullifier strategy can be used, like: commitment = hash(secret, nullifier), nullifierHash = hash(nullifier, nonce), in this case the nonce is a random secret number, which makes the nullification reusable. Each time the user reveals the knowledge of the secret behind the commitment, the nullifierHash is a new value, while it stays linked to the commitment.
 Experiment with different strategies to suit your use-case.
+
