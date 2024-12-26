@@ -1,6 +1,6 @@
 {
   "name": "niftyzk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A tool to scaffold and compile circom projects, run Powers of Tau Phase 2 ceremonies and generate cosmwasm contracts",
   "repository": {
     "url": "https://github.com/StrawberryChocolateFudge/niftyzk.git",
