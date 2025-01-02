@@ -9,6 +9,7 @@ const { runServer } = require("./lib/phase2ceremony/server");
 const { finalize } = require("./lib/compile/finalize");
 const { verificationKey } = require("./lib/compile/verificationkey");
 const { genContract } = require("./lib/compile/contract");
+const { hotReload } = require("./lib/dev/hotreload");
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -58,6 +59,16 @@ program.command("gencircuit")
         circuitPrompts()
     })
 
+program.command("dev")
+    .description("Hot reload for circuit development. input.js must contain a valid circuit input")
+    .option("--circuit [path]", "The circuit to test. Defaults to circuits/circuit.circom")
+    .option("--assertout", "Asserts the output of the circuit. The output must be exported from a getOutput() function from input.js")
+    .option("--verbose", "Show extra information for debugging")
+    .action(async (options) => {
+        await hotReload(options.circuit, options.assertout, options.verbose);
+    })
+
+
 program.command("compile")
     .description("Compile the circuits")
     .option("--circuit [path]", "Specify the location for the circuit. Defaults to circuits/circuit.circom")
@@ -106,7 +117,7 @@ program.command("finalize")
     })
 
 program
-    .command("verificationkey")
+    .command("vkey")
     .description("Generate the verification key for this circuit")
     .option("--final", "Export the final verification key after the phase2 ceremony")
     .action(async (options) => {
@@ -143,5 +154,7 @@ program.command("gencontract")
 
         await genContract(options)
     })
+
+
 
 program.parse();
