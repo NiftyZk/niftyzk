@@ -1,5 +1,5 @@
 var assert = require('assert');
-const { getVerifierCircuit } = require("../lib/templates/circom/template");
+const { getVerifierCircuit } = require("../lib/templates/circom/tested_template");
 const { getExtraPublicInputs } = require("../lib/templates/circom/utils")
 
 describe('Circom template generation', function () {
