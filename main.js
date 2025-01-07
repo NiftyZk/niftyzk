@@ -127,6 +127,7 @@ program
 
 program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
+    .option("--circuit","The full name of the circuit file to use. Defaults to circuit.circom")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
