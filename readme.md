@@ -55,7 +55,7 @@ After compilation, you can jump to creating the verification key and generating 
 
 `niftyzk finalize --beacon [string] --iter [num] --name [string]` - Run the finalization of the zkeys, after the phase2 ceremony has been finished. The --beacon flag is required. It must be a valid hexadecimal sequence, without 0x prefix. The --name is required, it's the name of the final contribution. The --iter flag is the number of iterations, defaults to 10. Finalize will output a final.zkey which contains the phase-2 contributions and can be used to generate the verification key.
 
-`niftyzk verificationkey --final` - Get the verification key from the zkey. When omitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag. This command writes the `circuits/compiled/vk_meta.json` for the tests, so the tests will know which zkey to use when creating a proof.
+`niftyzk vkey --final` - Get the verification key from the zkey. When omitting the final flag, the  0000.zkey will be used, this is handy when developing and iterating on ideas. To create the verification_key.json from the finalized zkey, use the --final flag. This command writes the `circuits/compiled/vk_meta.json` for the tests, so the tests will know which zkey to use when creating a proof.
 
 `npm run test` - You must run the scaffolded tests to proceed before generating the contracts. The tests output test proofs used for generating tests in Rust for the contracts. When developing circom circuits, always make sure the tests pass and output the required file.
 Tests require the verification key. The zkey used for exporting the verification_key.json must be written to `circuits/compiled/vk_meta.json` for the tests to know which zkey to use. You may change your tests to work differently, this was just used for convenience.
@@ -131,8 +131,8 @@ The circuits directory need to look like the following:
 
    [] Spare merkle trees
 
-[] EDDSA
-   [] EDDSA public key Merkle Tree
+[x] EDDSA
+   [x] EDDSA public key Merkle Tree
 
 [] More optimized CosmWasm smart contracts
 
