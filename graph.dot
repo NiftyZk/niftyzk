@@ -1,0 +1,34 @@
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  graph [fontname = "Handlee"];
+  node [fontname = "Handlee"];
+  edge [fontname = "Handlee"];
+
+  bgcolor=white;
+
+  Init -> Configure -> Project
+  
+  Project -> Iterate
+  
+  Iterate -> Project
+  
+  
+  Project -> Test
+  
+  Project -> Compile
+  
+  Compile -> VKey
+  
+  VKey -> Test
+
+  VKey -> Ceremony
+  
+  Ceremony -> Finalize
+
+  Finalize -> VKey
+  
+  VKey -> CosmWasmContract
+  
+  CosmWasmContract -> Deploy
+}
