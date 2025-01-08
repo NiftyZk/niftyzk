@@ -20,17 +20,20 @@ program.version("0.1.4")
 
 program
     .command("init")
-    .description("Initialize a new project")
+    .description("Initialize and scaffold a new project")
     .action(async (_, options) => {
         async function onSuccess() {
 
             if (options.args.length === 0) {
-                await setupWithCurrentDir();
+                await setupWithCurrentDir().then(() => {
+                    circuitPrompts(undefined)
+                });
             } else {
                 const dirname = options.args[0];
-                await setupWithNewDir(dirname)
+                await setupWithNewDir(dirname).then(() => {
+                    circuitPrompts(dirname)
+                })
             }
-            console.log(`Run ${chalk.blue("npm install")} in your project folder`)
         }
 
         checkIfCircomIsInstalled(onSuccess)
@@ -54,9 +57,9 @@ program
     })
 
 program.command("gencircuit")
-    .description("Generate circom circuits and javascript tests")
+    .description("Generate circom circuits and javascript tests for the current directory")
     .action(() => {
-        circuitPrompts()
+        circuitPrompts(dirname)
     })
 
 program.command("dev")
@@ -127,7 +130,7 @@ program
 
 program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
-    .option("--circuit","The full name of the circuit file to use. Defaults to circuit.circom")
+    .option("--circuit", "The full name of the circuit file to use. Defaults to circuit.circom")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
