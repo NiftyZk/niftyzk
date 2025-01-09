@@ -9,27 +9,31 @@ const { runServer } = require("./lib/phase2ceremony/server");
 const { finalize } = require("./lib/compile/finalize");
 const { verificationKey } = require("./lib/compile/verificationkey");
 const { genContract } = require("./lib/compile/contract");
+const { hotReload } = require("./lib/dev/hotreload");
 
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
-program.version("0.1.3")
+program.version("0.1.4")
     .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
 program
     .command("init")
-    .description("Initialize a new project")
+    .description("Initialize and scaffold a new project")
     .action(async (_, options) => {
         async function onSuccess() {
 
             if (options.args.length === 0) {
-                await setupWithCurrentDir();
+                await setupWithCurrentDir().then(() => {
+                    circuitPrompts(undefined)
+                });
             } else {
                 const dirname = options.args[0];
-                await setupWithNewDir(dirname)
+                await setupWithNewDir(dirname).then(() => {
+                    circuitPrompts(dirname)
+                })
             }
-            console.log(`Run ${chalk.blue("npm install")} in your project folder`)
         }
 
         checkIfCircomIsInstalled(onSuccess)
@@ -53,10 +57,20 @@ program
     })
 
 program.command("gencircuit")
-    .description("Generate circom circuits and javascript tests")
+    .description("Generate circom circuits and javascript tests for the current directory")
     .action(() => {
-        circuitPrompts()
+        circuitPrompts(dirname)
     })
+
+program.command("dev")
+    .description("Hot reload for circuit development. input.js must contain a valid circuit input")
+    .option("--circuit [path]", "The circuit to test. Defaults to circuits/circuit.circom")
+    .option("--assertout", "Asserts the output of the circuit. The output must be exported from a getOutput() function from input.js")
+    .option("--verbose", "Show extra information for debugging")
+    .action(async (options) => {
+        await hotReload(options.circuit, options.assertout, options.verbose);
+    })
+
 
 program.command("compile")
     .description("Compile the circuits")
@@ -106,7 +120,7 @@ program.command("finalize")
     })
 
 program
-    .command("verificationkey")
+    .command("vkey")
     .description("Generate the verification key for this circuit")
     .option("--final", "Export the final verification key after the phase2 ceremony")
     .action(async (options) => {
@@ -116,6 +130,7 @@ program
 
 program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
+    .option("--circuit", "The full name of the circuit file to use. Defaults to circuit.circom")
     .option("--ark", "Use the Arkworks Groth-16 verifier implementation")
     .option("--bellman", "Use the Bellman Groth-16 verifier implementation")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
@@ -143,5 +158,7 @@ program.command("gencontract")
 
         await genContract(options)
     })
+
+
 
 program.parse();
