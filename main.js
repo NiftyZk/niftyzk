@@ -59,7 +59,7 @@ program
 program.command("gencircuit")
     .description("Generate circom circuits and javascript tests for the current directory")
     .action(() => {
-        circuitPrompts(dirname)
+        circuitPrompts(undefined)
     })
 
 program.command("dev")
