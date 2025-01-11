@@ -6,6 +6,28 @@ Watch the explanation video here:
 
 https://www.youtube.com/watch?v=FxS9JD8gtyo
 
+## Tutorial articles:
+
+Introducing niftyzk:
+
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fhqiYOM63gO6wHZ8BqhKJo4kbF9Ud2ZGEPaAfSGyoJQ
+
+Tutorial 1: installation and commands
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fXl284T4VdtFAtCkxmJmuGwQlrtJOogq9g_-0jzSPYQ
+
+Tutorial 2: Commit-Reveal Scheme
+
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/aXGd1m9vP96GdN9Ly__tmvv7i5EE3vIwpH6tiR13q8I
+
+Tutorial 3: Edwards-curve Digial Signatures
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/A2LhByY77eOoiIk-nWIc-RkpZWVYrJJ3e3RLQFwVwYU
+
+Tutorial 4: Ceremony Devops
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/GjcDFiU2L9ek1SpLi-dNy2xklgGte2_CoxrsLdoXKr0
+
+Tutorial 5: CosmWasm
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/2tzxtVky5AoPITsDR7IBL0zkru7-eVmTB3LsQrmv3kc
+
 ## Dependencies
 
 The application requires Rust, Circom and Nodejs to be installed.
@@ -70,10 +92,6 @@ Specify the directory for the contracts using the `--folder` flag. When using th
 
 If you developed a custom cosmwasm contract already but want to generate a new one because you changed your circuits always use a different folder for the new contract, and then merge them manually where needed.
 
-Note: `gencontract` depends on a file `circuits/compiled/test_proof.json` for creating the Rust tests. This file is outputted by the javascript tests. It contains a valid proof and publicSignals and verificationKey that must match the verification_key.json file and pass the verification.. 
-
-If your tests can't write a file due to CI/CD or other reasons, you must make sure this file contains up to date data to generate valid Rust tests with. It is only used when creating a new Rust verifier.
-
 ## Checking the generated contracts
 Install the wasm rust compiler backend:
 `rustup target add wasm32-unknown-unknown`
@@ -101,7 +119,6 @@ The circuits directory need to look like the following:
     │   └── witness_calculator.js
     ├── circuit.r1cs  <-- The r1cs file is the output of the circom compiles
     ├── circuit.sym <-- Compilation artifact
-    ├── test_proof.json <-- The test_proof.json is written after running npm run test. The javascript generated test proofs are used when generating rust tests for the cosmwasm contract. Without this the rust tests can't be generated successfully.
     ├── verification_key.json <-- The verification key exported by snarkjs
     ├── vk_meta.txt <-- Used for tests. Stores information about which zkey was used for the verification_key.json. 
     └── zkeys <-- The zkeys with the contributions for the phase-2 ceremony. The final key will be stored here
