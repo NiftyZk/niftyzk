@@ -28,6 +28,8 @@ https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/GjcDFiU2L9ek1SpLi-
 Tutorial 5: CosmWasm
 https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/2tzxtVky5AoPITsDR7IBL0zkru7-eVmTB3LsQrmv3kc
 
+Tutorial 6: Sparse Merkle Trees
+https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/06I0cGUGBHoaid9jL-9xgjzA2vJ0mCwl7ENn3rO1DMo
 ## Dependencies
 
 The application requires Rust, Circom and Nodejs to be installed.
@@ -37,9 +39,12 @@ https://docs.circom.io/getting-started/installation/
 
 # Install
 
-Install the latest npm module straight from github
+Install the latest npm module straight from github:
 
 `npm install -g git+https://github.com/NiftyZk/niftyzk.git`
+
+Install version 0.2.0
+`npm install -g git+https://github.com/NiftyZk/niftyzk.git#v0.2.0`
 
 Install version 0.1.4:
 `npm install -g git+https://github.com/NiftyZk/niftyzk.git#v0.1.4`
