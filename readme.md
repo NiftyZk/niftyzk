@@ -8,26 +8,21 @@ https://www.youtube.com/watch?v=FxS9JD8gtyo
 
 ## Tutorial articles:
 
-Introducing niftyzk:
+[Introducing niftyzk](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fhqiYOM63gO6wHZ8BqhKJo4kbF9Ud2ZGEPaAfSGyoJQ)
 
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fhqiYOM63gO6wHZ8BqhKJo4kbF9Ud2ZGEPaAfSGyoJQ
+[Tutorial 1: installation and commands](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fXl284T4VdtFAtCkxmJmuGwQlrtJOogq9g_-0jzSPYQ)
 
-Tutorial 1: installation and commands
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/fXl284T4VdtFAtCkxmJmuGwQlrtJOogq9g_-0jzSPYQ
+[Tutorial 2: Commit-Reveal Scheme](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/aXGd1m9vP96GdN9Ly__tmvv7i5EE3vIwpH6tiR13q8I)
 
-Tutorial 2: Commit-Reveal Scheme
+[Tutorial 3: Edwards-curve Digital Signatures](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/A2LhByY77eOoiIk-nWIc-RkpZWVYrJJ3e3RLQFwVwYU)
 
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/aXGd1m9vP96GdN9Ly__tmvv7i5EE3vIwpH6tiR13q8I
+[Tutorial 4: Ceremony Devops](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/GjcDFiU2L9ek1SpLi-dNy2xklgGte2_CoxrsLdoXKr0)
 
-Tutorial 3: Edwards-curve Digial Signatures
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/A2LhByY77eOoiIk-nWIc-RkpZWVYrJJ3e3RLQFwVwYU
+[Tutorial 5: CosmWasm](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/2tzxtVky5AoPITsDR7IBL0zkru7-eVmTB3LsQrmv3kc)
 
-Tutorial 4: Ceremony Devops
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/GjcDFiU2L9ek1SpLi-dNy2xklgGte2_CoxrsLdoXKr0
+[Tutorial 6: Sparse Merkle Trees](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/06I0cGUGBHoaid9jL-9xgjzA2vJ0mCwl7ENn3rO1DMo)
 
-Tutorial 5: CosmWasm
-https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/2tzxtVky5AoPITsDR7IBL0zkru7-eVmTB3LsQrmv3kc
-
+[Tutorial 7: Anonymity sets](https://mirror.xyz/0x8c2d2a0C51f8F9476423476a79A572C46b622D6e/RAwgEe7WMGV9BlUc0SwOulSACE8NGVRh5_tSRfKsSHA)
 ## Dependencies
 
 The application requires Rust, Circom and Nodejs to be installed.
@@ -37,9 +32,12 @@ https://docs.circom.io/getting-started/installation/
 
 # Install
 
-Install the latest npm module straight from github
+Install the latest npm module straight from github:
 
 `npm install -g git+https://github.com/NiftyZk/niftyzk.git`
+
+Install version 0.2.0
+`npm install -g git+https://github.com/NiftyZk/niftyzk.git#v0.2.0`
 
 Install version 0.1.4:
 `npm install -g git+https://github.com/NiftyZk/niftyzk.git#v0.1.4`
@@ -128,7 +126,7 @@ The circuits directory need to look like the following:
         └── circuit_0000.zkey
 ```
 
-# Future Road map:
+# Development Road map:
 
 ```
 
@@ -149,7 +147,7 @@ The circuits directory need to look like the following:
 
    [x] Compute and Validate Merkle Proofs
 
-   [] Spare merkle trees
+   [x] Spare merkle trees
 
 [x] EDDSA
    [x] EDDSA public key Merkle Tree
