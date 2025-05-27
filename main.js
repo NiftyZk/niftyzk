@@ -73,28 +73,29 @@ program.command("dev")
 
 
 program.command("compile")
-    .description("Compile the circuits")
+    .description("Compile the circuits. Defaults to Groth16 with a BN254 curve. Use the setup plonk flag if you want to use plonk")
     .option("--circuit [path]", "Specify the location for the circuit. Defaults to circuits/circuit.circom")
+    .option("--setup-plonk", "Setup the circuit with PLONK. It creates the final circuit. There is no need for a ceremony.")
     .action((options, command) => {
         if (options.circuit) {
             //Path was specified. compile circuit with that path
-            compileCircuits(options.circuit)
+            compileCircuits(options.circuit, options.setupPlonk)
         } else {
             //Use default path
-            compileCircuits("")
+            compileCircuits("", options.setupPlonk)
         }
     })
 
 program
     .command("ceremony")
-    .description("Runs a phase 2 ceremony server that accepts anonymized contributions via a website. Default port is 3000. Prefix the command with PORT=number to change the default port")
+    .description("Only for Groth16. Runs a phase 2 ceremony server that accepts anonymized contributions via a website. Default port is 3000. Prefix the command with PORT=number to change the default port")
     .action(() => {
         //Run the the ceremony server
         runServer()
     })
 
 program.command("finalize")
-    .description("Finalize the circuit after the phase2 ceremony is finished")
+    .description("Only for Groth16. Finalize the circuit after the phase2 ceremony is finished")
     .option("-b, --beacon [string]", "A random beacon to use for finalizing the ceremony. For example a block hash or a hex number outputted by a Verifiable Delay Function (VDF)")
     .option("-i, --iter [num]", "Number of iterations")
     .option("-n, --name [string]", "The name of the final contribution")
@@ -119,6 +120,7 @@ program.command("finalize")
         await finalize(options.beacon, options.iter, options.name)
     })
 
+//TODO: Check for groth16 or plonk and finalize the circuit
 program
     .command("vkey")
     .description("Generate the verification key for this circuit")
@@ -127,7 +129,7 @@ program
         await verificationKey(options.final ?? false).then(() => process.exit(0))
     })
 
-
+//TODO: Check if it's groth16 or PLONK and ask for the correct flag!
 program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
     .option("--circuit", "The full name of the circuit file to use. Defaults to circuit.circom")
@@ -158,7 +160,6 @@ program.command("gencontract")
 
         await genContract(options)
     })
-
 
 
 program.parse();
