@@ -120,16 +120,17 @@ program.command("finalize")
         await finalize(options.beacon, options.iter, options.name)
     })
 
-//TODO: Check for groth16 or plonk and finalize the circuit
+
 program
     .command("vkey")
-    .description("Generate the verification key for this circuit")
-    .option("--final", "Export the final verification key after the phase2 ceremony")
+    .description("Generate the verification key for this circuit.")
+    .option("--final", "Export the final verification key for PLONK or after the Phase2 ceremony")
     .action(async (options) => {
-        await verificationKey(options.final ?? false).then(() => process.exit(0))
+        await verificationKey(options.final ?? false).catch(err => {
+            console.log(err.message)
+        }).then(() => process.exit(0))
     })
 
-//TODO: Check if it's groth16 or PLONK and ask for the correct flag!
 program.command("gencontract")
     .description("Generate a cosmwasm verifier smart contract")
     .option("--circuit", "The full name of the circuit file to use. Defaults to circuit.circom")
@@ -138,6 +139,8 @@ program.command("gencontract")
     .option("--overwrite", "If a contract directory already exists, you are required use this option to overwrite it.")
     .option("--folder [name]", "Specify the name of the generated contract's folder")
     .action(async (options) => {
+
+        //TODO: Read if it's groth16 or plonk from the verification key and generate the contract
 
         if (!options.ark && !options.bellman) {
             console.log(chalk.red("You need to use either --ark or --bellman implementations!"))
