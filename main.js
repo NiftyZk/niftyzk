@@ -10,6 +10,7 @@ const { finalize } = require("./lib/compile/finalize");
 const { verificationKey } = require("./lib/compile/verificationkey");
 const { genContract } = require("./lib/compile/contract");
 const { hotReload } = require("./lib/dev/hotreload");
+const { getResponse } = require("./lib/ai/openai");
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -21,17 +22,18 @@ program.version("0.2.0")
 program
     .command("init")
     .description("Initialize and scaffold a new project")
-    .action(async (_, options) => {
+    .option("--plonk", "Use the plonk flag to generate tests for plonk")
+    .action(async (flags,options) => {
         async function onSuccess() {
 
             if (options.args.length === 0) {
                 await setupWithCurrentDir().then(() => {
-                    circuitPrompts(undefined)
+                    circuitPrompts(undefined, flags.plonk)
                 });
             } else {
                 const dirname = options.args[0];
                 await setupWithNewDir(dirname).then(() => {
-                    circuitPrompts(dirname)
+                    circuitPrompts(dirname, flags.plonk)
                 })
             }
         }
@@ -162,6 +164,55 @@ program.command("gencontract")
 
 
         await genContract(options)
+    })
+
+program
+    .command("vibe")
+    .description("Generate code with an LLM. Supporting OpenAI")
+    .option("--circom", "Generate circom code")
+    .option("--cosmwasm", "Generate cosmwasm contract files in rust")
+    .option("--file", "The file to create or update.")
+    .option("--preserve", "Do not update the file, just print information to the console")
+    .option("--prompt", "The prompt to update the circom circuit")
+    .action(async (options) => {
+        const client = await prepareClient()
+
+        if (!options.circom && !options.cosmwasm) {
+            console.log(chalk.red("You need to use either --cosmwasm or --circom to chose which code to generate"))
+            return;
+        }
+
+        if (!options.file) {
+            console.log(chalk.red("You need to specify the file name to create or update"))
+            return;
+        }
+
+        //TODO: Open the file in the path where the executable is running!
+        //TODO: it should recirsively fund the file either in the circom or in a cosmwasm contract directory
+        //If not found then fileNotExists
+        // const filePath = path.join(process.cwd(),)
+        //REad the file into the content
+
+        const content = ""
+
+        const fileExits = "" // Check if the file exits
+
+        //Send the prompt
+
+        const response = await getResponse(
+            client,
+            options.prompt,
+            options.preserve,
+            content,
+            fileExists,
+            options.circom ? "circom" : "cosmwasm"
+        )
+
+        //switch.. write back the file or similar
+
+
+
+
     })
 
 
