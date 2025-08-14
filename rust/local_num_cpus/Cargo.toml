@@ -1,0 +1,9 @@
+[package]
+name = "num_cpus"
+version = "1.16.0"  # Match the actual num_cpus version
+
+
+[dependencies]
+# Only include original num_cpus for non-WASM targets
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+num_cpus_original = { package = "num_cpus", version = "1.16" }
