@@ -1,7 +1,7 @@
 const { Command } = require("commander");
 const figlet = require("figlet");
-const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled } = require("./lib/init/packages");
-const { explainPtauFiles, selectPtauFileToDownload, isValidPtauFilename, downloadPtauFile } = require("./lib/loaders/ptauLoader")
+const { setupWithCurrentDir, setupWithNewDir, checkIfCircomIsInstalled, checkPKGJsonForPlonk } = require("./lib/init/packages");
+const { explainPtauFiles, selectPtauFileToDownload, isValidPtauFilename, downloadPtauFile, isValidPlonkSetupFileName, downloadUniversalSetupFiles, explainPlonkitFiles, selectPlonkSetupileToDownload } = require("./lib/loaders/ptauLoader")
 const chalk = require("chalk");
 const { circuitPrompts } = require("./lib/gencircuit/circuitprompt");
 const { compileCircuits } = require("./lib/compile/runcompiler");
@@ -11,6 +11,11 @@ const { verificationKey } = require("./lib/compile/verificationkey");
 const { genContract } = require("./lib/compile/contract");
 const { hotReload } = require("./lib/dev/hotreload");
 const { getResponse } = require("./lib/ai/openai");
+const path = require("path")
+const fs = require("fs")
+const { COMPILEDDIR } = require("./lib/paths");
+const { compileWithPlonkit } = require("./lib/compile/runPlonkCompiler");
+
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -23,24 +28,25 @@ program
     .command("init")
     .description("Initialize and scaffold a new project")
     .option("--plonk", "Use the plonk flag to generate tests for plonk")
-    .action(async (flags,options) => {
+    .action(async (flags, options) => {
         async function onSuccess() {
 
             if (options.args.length === 0) {
-                await setupWithCurrentDir().then(() => {
+                await setupWithCurrentDir(flags.plonk).then(() => {
                     circuitPrompts(undefined, flags.plonk)
                 });
             } else {
                 const dirname = options.args[0];
-                await setupWithNewDir(dirname).then(() => {
+                await setupWithNewDir(dirname, flags.plonk).then(() => {
                     circuitPrompts(dirname, flags.plonk)
                 })
             }
         }
 
         checkIfCircomIsInstalled(onSuccess)
-
     })
+
+//TODO: a new command to init with plonkt
 
 program
     .command("ptaufiles")
@@ -58,11 +64,26 @@ program
 
     })
 
+program.command("plonkfiles")
+    .description("Display informtion and download the plonk setup files")
+    .option("-f, --filename [filename]", "The file to download")
+    .action(async (option) => {
+        //TODO: only run this if plonk was set in package.json
+        if (typeof option.filename === "string" && isValidPlonkSetupFileName(option.filename)) {
+            await downloadUniversalSetupFiles(option.filename)
+        } else {
+            explainPlonkitFiles()
+            selectPlonkSetupileToDownload()
+        }
+    })
+
+
 program.command("gencircuit")
     .description("Generate circom circuits and javascript tests for the current directory")
     .action(() => {
         circuitPrompts(undefined)
     })
+
 
 program.command("dev")
     .description("Hot reload for circuit development. input.js must contain a valid circuit input")
@@ -77,14 +98,26 @@ program.command("dev")
 program.command("compile")
     .description("Compile the circuits. Defaults to Groth16 with a BN254 curve. Use the setup plonk flag if you want to use plonk")
     .option("--circuit [path]", "Specify the location for the circuit. Defaults to circuits/circuit.circom")
-    .option("--setup-plonk", "Setup the circuit with PLONK. It creates the final circuit. There is no need for a ceremony.")
-    .action((options, command) => {
-        if (options.circuit) {
-            //Path was specified. compile circuit with that path
-            compileCircuits(options.circuit, options.setupPlonk)
+    .action(async (options, command) => {
+        const hasPlonk = await checkPKGJsonForPlonk()
+
+        if (hasPlonk) {
+
+            if (options.circuit) {
+                compileWithPlonkit(options.circuit)
+            } else {
+                compileWithPlonkit("")
+            }
+
+            //Compile it with the rust wasm bindings!
         } else {
-            //Use default path
-            compileCircuits("", options.setupPlonk)
+            if (options.circuit) {
+                //Path was specified. compile circuit with that path
+                compileCircuits(options.circuit)
+            } else {
+                //Use default path
+                compileCircuits("")
+            }
         }
     })
 
@@ -142,28 +175,31 @@ program.command("gencontract")
     .option("--folder [name]", "Specify the name of the generated contract's folder")
     .action(async (options) => {
 
-        //TODO: Read if it's groth16 or plonk from the verification key and generate the contract
+        const verificationKeyPath = path.join(COMPILEDDIR, "verification_key.json");
+        const verificationKeyBuff = fs.readFileSync(verificationKeyPath).toString();
+        const verificationKeyString = verificationKeyBuff.toString();
+        const verificationKeyJson = JSON.parse(verificationKeyString);
 
-        if (!options.ark && !options.bellman) {
-            console.log(chalk.red("You need to use either --ark or --bellman implementations!"))
+        const isPlonk = verificationKeyJson.protocol === "plonk"
+
+        //Ask only when it's not plonk
+        if (!isPlonk) {
+            if (!options.ark && !options.bellman) {
+                console.log(chalk.red("You need to use either --ark or --bellman implementations!"))
+                return;
+            }
+            if (options.ark && options.bellman) {
+                console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
+                return;
+            }
+        } else {
+            console.log("Can't generate Plonk contract here")
+            console.log("Use the command niftyzk gen_plonk_contract")
             return;
         }
-        if (options.ark && options.bellman) {
-            console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
-            return;
-        }
-        if (!options.folder) {
-            console.log(chalk.red("Use the --folder flag to specify the name of the contract directory"))
-            return;
-        }
-
-        if (typeof options.folder !== "string") {
-            console.log(chalk.red("Must specify the name of the folder to generate the contracts to."))
-            return;
-        }
 
 
-        await genContract(options)
+        await genContract(options, isPlonk)
     })
 
 program
