@@ -99,9 +99,11 @@ impl SetupForProver {
         key_monomial_form: Crs<E, CrsForMonomialForm>,
         key_lagrange_form: Option<Crs<E, CrsForLagrangeForm>>,
     ) -> Result<Self, anyhow::Error> {
+
         let (gates_count, hints) = transpile_with_gates_count(circuit.clone())?;
         log::info!("transpile done, gates_count {} hints size {}", gates_count, hints.len());
         let setup_polynomials = setup(circuit, &hints)?;
+        log::info!("setup polynomials done");
         let size = setup_polynomials.n.next_power_of_two().trailing_zeros();
         log::info!("circuit setup_polynomials.n {:?} size {}", setup_polynomials.n, size);
         let setup_power_of_two = std::cmp::max(size, SETUP_MIN_POW2);
