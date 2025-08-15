@@ -21,11 +21,18 @@ use crate::circom_circuit::{ CircuitJson, R1CS };
 
 use crate::bindings::{ read_file_sync };
 
-/// load proof by filename
+/// Load proof from file using JS FS
 pub fn load_proof<E: Engine>(filename: &str) -> Proof<E, PlonkCsWidth4WithNextStepParams> {
-    Proof::<E, PlonkCsWidth4WithNextStepParams>
-        ::read(File::open(filename).expect("read proof file err"))
-        .expect("read proof err")
+    let data = read_file_sync(filename);
+    load_proof_from_bytes::<E>(data)
+}
+
+/// Load proof from bytes (Vec<u8>)
+pub fn load_proof_from_bytes<E: Engine>(
+    buffer: Vec<u8>
+) -> Proof<E, PlonkCsWidth4WithNextStepParams> {
+    let mut cursor = Cursor::new(buffer);
+    Proof::<E, PlonkCsWidth4WithNextStepParams>::read(&mut cursor).expect("read proof err")
 }
 
 /// load multiple proofs form a list
@@ -55,15 +62,20 @@ pub fn load_proofs_from_list<E: Engine>(
     proofs
 }
 
-/// load verification key file by filename
+/// Load verification key from file (filename)
 pub fn load_verification_key<E: Engine>(
     filename: &str
 ) -> VerificationKey<E, PlonkCsWidth4WithNextStepParams> {
-    let mut reader = BufReader::with_capacity(
-        1 << 24,
-        File::open(filename).expect("read vk file err")
-    );
-    VerificationKey::<E, PlonkCsWidth4WithNextStepParams>::read(&mut reader).expect("read vk err")
+    let data = read_file_sync(filename);
+    load_verification_key_from_bytes::<E>(data)
+}
+
+/// Load verification key from bytes (Vec<u8>)
+pub fn load_verification_key_from_bytes<E: Engine>(
+    buffer: Vec<u8>
+) -> VerificationKey<E, PlonkCsWidth4WithNextStepParams> {
+    let mut cursor = Cursor::new(buffer);
+    VerificationKey::<E, PlonkCsWidth4WithNextStepParams>::read(&mut cursor).expect("read vk err")
 }
 
 /// get universal setup file by filename
@@ -108,6 +120,11 @@ pub fn load_witness_from_file<E: Engine>(filename: &str) -> Vec<E::Fr> {
     } else {
         load_witness_from_bin_file::<E>(filename)
     }
+}
+
+//It reads the witness from a blob that was passed in by js
+pub fn load_witness_from_in_memory_blob<E: Engine>(witness_data: Vec<u8>) -> Vec<E::Fr> {
+    load_witness_from_array::<E>(witness_data).expect("read witness failed")
 }
 
 /// load witness from JSON file
