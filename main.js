@@ -175,13 +175,17 @@ program.command("gencontract")
     .option("--folder [name]", "Specify the name of the generated contract's folder")
     .action(async (options) => {
 
-        const verificationKeyPath = path.join(COMPILEDDIR, "verification_key.json");
-        const verificationKeyBuff = fs.readFileSync(verificationKeyPath).toString();
-        const verificationKeyString = verificationKeyBuff.toString();
-        const verificationKeyJson = JSON.parse(verificationKeyString);
+        if (!options.folder) {
+            console.log(chalk.red("Use the --folder flag to specify the name of the contract directory"))
+            return;
+        }
 
-        const isPlonk = verificationKeyJson.protocol === "plonk"
+        if (typeof options.folder !== "string") {
+            console.log(chalk.red("Must specify the name of the folder to generate the contracts to."))
+            return;
+        }
 
+        const isPlonk = await checkPKGJsonForPlonk();
         //Ask only when it's not plonk
         if (!isPlonk) {
             if (!options.ark && !options.bellman) {
@@ -192,13 +196,7 @@ program.command("gencontract")
                 console.log(chalk.red("Can't use --ark and --bellman at the same time. Select one."))
                 return;
             }
-        } else {
-            console.log("Can't generate Plonk contract here")
-            console.log("Use the command niftyzk gen_plonk_contract")
-            return;
         }
-
-
         await genContract(options, isPlonk)
     })
 
