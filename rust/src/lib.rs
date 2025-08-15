@@ -60,29 +60,15 @@ pub fn export_verification_key(setupfile: &str, r1cs_file: &str, vk_out: &str) -
     return true;
 }
 
-#[wasm_bindgen]
-pub fn serialize_verification_key(vk_path: &str) -> String {
-    let vkey = read_file_sync(vk_path);
-    //Parses it and then serializes it so it can be concated into a cosmwasm contract
-    //TODO: then the deserializer will work inside the cosmwasm contract!
-    "".to_string()
-}
 
-#[derive(Serialize)]
-pub struct ProveRes {
-    pub proof: String,
-    pub public_inputs: String,
-}
 
 #[wasm_bindgen]
 pub fn prove(
-    setupfile: &str,
-    r1cs_file: &str,
-    witness_file: &str,
-    proof_bin_file: &str,
-    proof_json_file: &str,
+    setupfile: &str, //TODO: pass it as a Vec<u8> for browser support
+    r1cs_file: &str, //TODO: pass it as a Vec<u8>
+    witness_file: &str, //TODO: pass it as a Vec<u8>
     public_inputs_json: &str
-) -> JsValue {
+) -> Vec<u8> {
     console_log::init_with_level(log::Level::Debug).expect("console_log init failed");
     console_error_panic_hook::set_once();
 
@@ -107,21 +93,14 @@ pub fn prove(
 
     let mut proof_buf = Vec::new();
     proof.write(&mut proof_buf).unwrap();
-    write_file_sync(&proof_bin_file, &proof_buf);
 
-    let (inputs, serialized_proof) = bellman_vk_codegen::serialize_proof(&proof);
-    let ser_proof_str = serde_json::to_string_pretty(&serialized_proof).unwrap();
-    let ser_inputs_str = serde_json::to_string_pretty(&inputs).unwrap();
-
-    let result = ProveRes {
-        proof: ser_proof_str,
-        public_inputs: ser_inputs_str,
-    };
-
-    serde_wasm_bindgen::to_value(&result).unwrap()
+    proof_buf
 }
 
-//TODO: Run verify and make it output the serialized vkey and a serialzied proof
-//TODO: that will be used afterwards to insert into the cosmwasm contract code!
-// #[wasm_bindgen]
-// pub fn verify(vk_path: &str) {}
+#[wasm_bindgen]
+pub fn verify(vk_bytes: Vec<u8>, proof_bytes: Vec<u8>) -> bool {
+    let vk = reader::load_verification_key_from_bytes::<Bn256>(vk_bytes);
+    let proof = reader::load_proof_from_bytes::<Bn256>(proof_bytes);
+    let correct = plonk::verify(&vk, &proof, "keccak").expect("fail to verify proof");
+    correct
+}
