@@ -54,12 +54,15 @@ Using the Bellman based contract requires an adapter for the verification key an
 `niftyzk help`  - Display the help text
 
 `niftyzk init [projectname]` - Run the initialization script to initialize a new project or add the dependencies to an existing local package.json if you omit the projectname.
-The dependencies for the project are circomlib, circomlibjs,ffjavascript and snarkjs. Tests are ran using Jest,
+The dependencies for the project are circomlib, circomlibjs,ffjavascript and snarkjs. Tests are ran using Jest.
+use the flag `--plonk` to set up a project for plonk verication instead of groth-16
 
 `niftyzk ptaufiles` - Display information and download powers of tau files. The files were created as a phase 1 ceremony for Polygon Hermez and more information can be found about them in the Snarkjs repository.
 A ptau file is required to compile circuits and proceed with the phase2 ceremony which is circuit specific. Not all downloadable files are compatible with the built in phase-2 ceremony due to their size. Never commit your ptau files, instead download them each time you use the project.
 
 Optionally use the `--filename` flag to specify which file to download without waiting for a prompt to select it manually. Useful for automating the download of files.
+
+`niftyzk plonkfiles` - Display informtion and download trusted setup file from the Aztec ceremony. Required to use with PLONK. 
 
 
 `niftyzk gencircuit` - Generate the circom circuit with the option to add extra parameters. This will scaffold a circuit with a commitment reveal scheme using 2 secret inputs,`secret and nullifier` and public inputs `nullifierHash and commitmentHash`. 
@@ -72,7 +75,8 @@ The extra parameters added via input prompt will be used in hidden signals in th
 After compilation, you can jump to creating the verification key and generating a contract for development or proceed with the phase-2 ceremony, after which the circuits can't be changed again.
 
 
-`niftyzk ceremony` - Run a phase2 ceremony server for the circom circuits. It supports groth-16 proving system. The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the `sha256sum` of the name they entered.
+`niftyzk ceremony` - Run a phase2 ceremony server for the circom circuits. It supports groth-16 proving system. i you use PLONK it's not required.
+ The CLI contains a server that serves a webpage that allows for contributions. The project can be deployed on a VPS to host a ceremony. The server supports 25 simultaneous contributions in a queue. The contributions are anonymous, each contributor can verify their contributions by downloading the log file and comparing the entries with the `sha256sum` of the name they entered.
 
 ![ceremony page](ceremonyPage.webp)
 
@@ -89,9 +93,12 @@ This must be ran after the verification_key.json has been generated and the test
 
 The library used for the verifier is either `--bellman` or `--ark` . 
 
+If you used PLONK, you don't need to specify the library, only bellman is supported.
+
 Specify the directory for the contracts using the `--folder` flag. When using the same folder, the contract will be overwritten completely and so you must explicitly allow that to happen using the `--overwrite` flag. 
 
 If you developed a custom cosmwasm contract already but want to generate a new one because you changed your circuits always use a different folder for the new contract, and then merge them manually where needed.
+
 
 ## Checking the generated contracts
 Install the wasm rust compiler backend:
@@ -128,10 +135,6 @@ The circuits directory need to look like the following:
 
 
 
-## Next Release
-0.1.4 will contain a scaffolded dev.js file to use `circom_tester`. It lets developers iterate faster than compiling and running unit tests.
-It will work with the `npm run dev` command inside the scaffolded directory. Optionally it will watch the circuits directory with fs.watch and rerun each time a circom file has changed. Kind of like a hot reload style development experience.
-
 ## Available Hash functions:
 
 * Poseidon Hash - Generally this is the recommended hash function to use
@@ -166,7 +169,7 @@ The nullifier scaffolded for the commitment reveal scheme is used to nullify the
 If the commitment is reusable because of the use-case of the DApp, e.g: it controls a reusable wallet, then a different nullifier strategy can be used, like: commitment = hash(secret, nullifier), nullifierHash = hash(nullifier, nonce), in this case the nonce is a random secret number, which makes the nullification reusable. Each time the user reveals the knowledge of the secret behind the commitment, the nullifierHash is a new value, while it stays linked to the commitment.
 Experiment with different strategies to suit your use-case.
 
-## Buidling Rust
+## Building Rust
 
 The project now contains rust code to help creating verifiers for PLONK with bellman_ce for the cosmwasm ecosystem
 
