@@ -3,3 +3,5 @@ ptau
 frontend/.cache
 frontend/dist
 frontend/node_modules
+private
+rust/target
