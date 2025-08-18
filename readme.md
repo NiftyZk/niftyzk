@@ -126,42 +126,7 @@ The circuits directory need to look like the following:
         └── circuit_0000.zkey
 ```
 
-# Development Road map:
 
-```
-
-
-[x] More circuit generation parameters
-
-   [x] Choose hashing algorithms when running gencircuit
-      [x] Poseidon
-      [x] Pedersen
-      [x] Mimc7
-      [x] MimcSponge 
-
-[x] Merkle Trees and utility commands
-
-   [x] Merkle trees
-
-   [x] Generate fixed-sized populated trees (E.g: Pre-determined blockchain transaction parameters to distribute off-chain)
-
-   [x] Compute and Validate Merkle Proofs
-
-   [x] Spare merkle trees
-
-[x] EDDSA
-   [x] EDDSA public key Merkle Tree
-
-[] More optimized CosmWasm smart contracts
-
-[] CosmWasm contract templates
-
-[] Support for bls12_381 curve Rust verifier
-
-[] Support for plonk Rust verifier
-
-[] Support for fflonk Rust verifier
-```  
 
 ## Next Release
 0.1.4 will contain a scaffolded dev.js file to use `circom_tester`. It lets developers iterate faster than compiling and running unit tests.
@@ -201,3 +166,14 @@ The nullifier scaffolded for the commitment reveal scheme is used to nullify the
 If the commitment is reusable because of the use-case of the DApp, e.g: it controls a reusable wallet, then a different nullifier strategy can be used, like: commitment = hash(secret, nullifier), nullifierHash = hash(nullifier, nonce), in this case the nonce is a random secret number, which makes the nullification reusable. Each time the user reveals the knowledge of the secret behind the commitment, the nullifierHash is a new value, while it stays linked to the commitment.
 Experiment with different strategies to suit your use-case.
 
+## Buidling Rust
+
+The project now contains rust code to help creating verifiers for PLONK with bellman_ce for the cosmwasm ecosystem
+
+build the rust project using the command:
+
+`cargo build --target wasm32-unknown-unknown`
+
+get the wasm:
+
+`wasm-pack build --target nodejs`
