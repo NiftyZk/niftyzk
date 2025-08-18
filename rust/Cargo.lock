@@ -1102,6 +1102,7 @@ dependencies = [
  "env_logger",
  "franklin-crypto",
  "getrandom 0.2.16",
+ "hex",
  "hex-literal",
  "itertools 0.8.2",
  "log",
