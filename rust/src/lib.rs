@@ -60,21 +60,14 @@ pub fn export_verification_key(setupfile: &str, r1cs_file: &str, vk_out: &str) -
     return true;
 }
 
-
-
 #[wasm_bindgen]
-pub fn prove(
-    setupfile: &str, //TODO: pass it as a Vec<u8> for browser support
-    r1cs_file: &str, //TODO: pass it as a Vec<u8>
-    witness_file: &str, //TODO: pass it as a Vec<u8>
-    public_inputs_json: &str
-) -> Vec<u8> {
+pub fn prove(setupfile_bytes: Vec<u8>, r1cs_bytes: Vec<u8>, witness_bytes: Vec<u8>) -> Vec<u8> {
     console_log::init_with_level(log::Level::Debug).expect("console_log init failed");
     console_error_panic_hook::set_once();
 
     let circuit = CircomCircuit {
-        r1cs: reader::load_r1cs(&r1cs_file),
-        witness: Some(reader::load_witness_from_file::<Bn256>(&witness_file)),
+        r1cs: reader::load_r1cs_from_bytes(r1cs_bytes),
+        witness: Some(reader::load_witness_from_array::<Bn256>(witness_bytes).unwrap()),
         wire_mapping: None,
         aux_offset: plonk::AUX_OFFSET,
     };
@@ -82,7 +75,7 @@ pub fn prove(
     let setup = plonk::SetupForProver
         ::prepare_setup_for_prover(
             circuit.clone(),
-            reader::load_key_monomial_form(&setupfile),
+            reader::load_key_monomial_form_bytes::<Bn256>(setupfile_bytes),
             None
         )
         .expect("prepare err");

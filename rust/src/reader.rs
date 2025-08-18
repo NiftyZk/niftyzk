@@ -91,7 +91,11 @@ fn get_universal_setup_file_buff_reader(
 // load monomial form SRS from a file using JS FS
 pub fn load_key_monomial_form<E: Engine>(filename: &str) -> Crs<E, CrsForMonomialForm> {
     let file_bytes = read_file_sync(filename);
-    let mut cursor = std::io::Cursor::new(file_bytes);
+    load_key_monomial_form_bytes(file_bytes)
+}
+
+pub fn load_key_monomial_form_bytes<E:Engine>(bytes: Vec<u8>) -> Crs<E,CrsForMonomialForm>{
+    let mut cursor = std::io::Cursor::new(bytes);
     Crs::<E, CrsForMonomialForm>::read(&mut cursor).expect("read key_monomial_form err")
 }
 
@@ -266,6 +270,14 @@ fn load_r1cs_from_bin_file(filename: &str) -> (R1CS<Bn256>, Vec<usize>) {
     let cursor = Cursor::new(data); // in-memory reader
     load_r1cs_from_bin(cursor)
 }
+
+/// load r1cs from bin by raw bytes
+pub fn load_r1cs_from_bytes(data: Vec<u8>) -> R1CS<Bn256> {
+    let cursor = Cursor::new(data); // in-memory reader over Vec<u8>
+   let (r1cs, _wire_mapping) = load_r1cs_from_bin(cursor);
+        r1cs
+}
+
 /// load r1cs from bin by a reader
 fn load_r1cs_from_bin<R: Read + Seek>(reader: R) -> (R1CS<Bn256>, Vec<usize>) {
     let file = crate::r1cs_file::from_reader(reader).expect("unable to read.");
