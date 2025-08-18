@@ -20,7 +20,7 @@ const { compileWithPlonkit } = require("./lib/compile/runPlonkCompiler");
 console.log(figlet.textSync("NiftyZK"))
 
 const program = new Command();
-program.version("0.2.0")
+program.version("0.3.0")
     .description("Scaffold a new Circom project and circuits, compile it and run Powers of Tau Phase-2 ceremonies. Generate a cosmwasm verifier contract. Supports Groth-16 with a BN128 curve")
     .name("niftyzk")
 
@@ -46,7 +46,6 @@ program
         checkIfCircomIsInstalled(onSuccess)
     })
 
-//TODO: a new command to init with plonkt
 
 program
     .command("ptaufiles")
