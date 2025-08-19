@@ -11,11 +11,11 @@ const { verificationKey } = require("./lib/compile/verificationkey");
 const { genContract } = require("./lib/compile/contract");
 const { hotReload } = require("./lib/dev/hotreload");
 const { getResponse } = require("./lib/ai/openai");
-const path = require("path")
-const fs = require("fs")
-const { COMPILEDDIR } = require("./lib/paths");
 const { compileWithPlonkit } = require("./lib/compile/runPlonkCompiler");
-
+const { prepareClient } = require("./lib/ai/credentials");
+const path = require("path");
+const fs = require("fs");
+const { isInCwd } = require("./lib/ai/utils");
 
 console.log(figlet.textSync("NiftyZK"))
 
@@ -202,16 +202,28 @@ program.command("gencontract")
 program
     .command("vibe")
     .description("Generate code with an LLM. Supporting OpenAI")
+    .option("--file [name]", "The file to create or update.")
     .option("--circom", "Generate circom code")
     .option("--cosmwasm", "Generate cosmwasm contract files in rust")
-    .option("--file", "The file to create or update.")
     .option("--preserve", "Do not update the file, just print information to the console")
-    .option("--prompt", "The prompt to update the circom circuit")
+    .option("--prompt [message]", "The prompt to update the circom circuit")
     .action(async (options) => {
+        console.log(chalk.blue("NIFTYZK AI IS IN PREVIEW"))
+        const hasPgkJson = fs.existsSync(path.join(process.cwd(), "package.json"));
+
+        if (!hasPgkJson) {
+            console.log(chalk.red("AI must be invoked in the root of the  project"))
+            return;
+        }
+
         const client = await prepareClient()
 
         if (!options.circom && !options.cosmwasm) {
             console.log(chalk.red("You need to use either --cosmwasm or --circom to chose which code to generate"))
+            return;
+        }
+        if (options.circom && options.cosmwasm) {
+            console.log(chalk.red("You can't use both circom and cosmwasm at the same time for now."))
             return;
         }
 
@@ -220,19 +232,20 @@ program
             return;
         }
 
-        //TODO: Open the file in the path where the executable is running!
-        //TODO: it should recirsively fund the file either in the circom or in a cosmwasm contract directory
-        //If not found then fileNotExists
-        // const filePath = path.join(process.cwd(),)
-        //REad the file into the content
+        if (!isInCwd(options.file)) {
+            console.log(chalk.red("File is not in the currently working directory"))
+            return;
+        }
 
-        const content = ""
-
-        const fileExits = "" // Check if the file exits
+        const fileExists = fs.existsSync(options.file)
 
         //Send the prompt
+        let content = ""
+        if (fileExists) {
+            content = fs.readFileSync(options.file)
+        }
 
-        const response = await getResponse(
+        const output_text = await getResponse(
             client,
             options.prompt,
             options.preserve,
@@ -242,6 +255,12 @@ program
         )
 
         //switch.. write back the file or similar
+        if (!options.preserve) {
+            if (output_text) {
+                //For now just write the file back to disk
+                fs.writeFileSync(options.file, output_text)
+            }
+        }
 
 
 
