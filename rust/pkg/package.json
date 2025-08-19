@@ -1,0 +1,11 @@
+{
+  "name": "plonkit",
+  "version": "0.1.6",
+  "files": [
+    "plonkit_bg.wasm",
+    "plonkit.js",
+    "plonkit.d.ts"
+  ],
+  "main": "plonkit.js",
+  "types": "plonkit.d.ts"
+}
